@@ -1,0 +1,21 @@
+# Reglas de Seguridad (.gitignore) para GitHub Pages
+# Bloquea estrictamente subir archivos Excel (.xlsx) que contienen telefonos, correos y RFCs completos
+*.xlsx
+*.xls
+*.csv
+*.png
+*.py
+*.ipynb
+*.bat
+Buscador_Horarios_Planta_2027A.html
+
+# Solo permite subir a GitHub Pages el portal publico sanitizado (index.html)
+!index.html
+
+# Documentacion interna (no publicar)
+*.pdf
+*.tex
+*.aux
+*.log
+*.toc
+*.out
