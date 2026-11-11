@@ -1,0 +1,2306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo Interactiva UCTP — Facultad de Economía UAEMex (AG Memético Vectorizado)</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            uaemex: {
+              green: '#1b4d3e',
+              dark: '#113328',
+              light: '#2e7d5e',
+              mint: '#e8f3ee',
+              gold: '#c59b27',
+              goldlight: '#f9f3e3',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f7f5;
+      color: #1e293b;
+    }
+    .step-btn-active {
+      background-color: #1b4d3e !important;
+      color: #ffffff !important;
+      border-color: #c59b27 !important;
+      box-shadow: 0 4px 12px rgba(27, 77, 62, 0.25);
+    }
+    .room-pill {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .room-pill:hover {
+      transform: translateY(-2px);
+    }
+    .pulse-ring {
+      animation: pulseRing 2s infinite;
+    }
+    @keyframes pulseRing {
+      0% { box-shadow: 0 0 0 0 rgba(197, 155, 39, 0.6); }
+      70% { box-shadow: 0 0 0 8px rgba(197, 155, 39, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(197, 155, 39, 0); }
+    }
+    .custom-scroll::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #1b4d3e;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- HEADER INSTITUCIONAL UAEMex -->
+  <header class="bg-uaemex-dark text-white border-b-4 border-uaemex-gold sticky top-0 z-40 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-uaemex-gold/20 border-2 border-uaemex-gold flex items-center justify-center font-extrabold text-uaemex-gold text-lg shadow-inner">
+          FE
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-uaemex-gold">UAEMex • Facultad de Economía</span>
+            <span class="text-[11px] bg-emerald-800/80 text-emerald-100 px-2 py-0.5 rounded-full border border-emerald-600 font-mono">2026A → 2027A</span>
+          </div>
+          <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-white">
+            Simulador Interactivo del Modelo UCTP: Algoritmo Genético Memético Vectorizado
+          </h1>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="btnAutoTour" onclick="toggleGuidedTour()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-uaemex-gold text-slate-950 hover:bg-amber-400 transition flex items-center gap-1.5 shadow">
+          <span id="tourIcon">▶</span>
+          <span id="tourLabel">Recorrido Guiado</span>
+        </button>
+        <button onclick="openModalResumen()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition">
+          Ficha Técnica
+        </button>
+      </div>
+    </div>
+
+    <!-- BARRA DE NAVEGACIÓN DE LOS 8 PASOS DEL MODELO -->
+    <div class="bg-uaemex-green/95 border-t border-white/10">
+      <div class="max-w-7xl mx-auto px-4 py-2 overflow-x-auto custom-scroll">
+        <nav class="flex items-center gap-1.5 min-w-max" aria-label="Pasos del Modelo">
+          <button onclick="goToStep(1)" id="navStep1" class="step-nav-btn step-btn-active px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-emerald-100 hover:bg-white/10 transition flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-black/25 flex items-center justify-center font-mono text-[11px]">1</span>
+            <span>Campus y Distancias</span>
+          </button>
+          <button onclick="goToStep(2)" id="navStep2" class="step-nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-emerald-100 hover:bg-white/10 transition flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-black/25 flex items-center justify-center font-mono text-[11px]">2</span>
+            <span>Genoma y Dominios Aᵢ</span>
+          </button>
+          <button onclick="goToStep(3)" id="navStep3" class="step-nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-emerald-100 hover:bg-white/10 transition flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-black/25 flex items-center justify-center font-mono text-[11px]">3</span>
+            <span>Tensor 3D NumPy</span>
+          </button>
+          <button onclick="goToStep(4)" id="navStep4" class="step-nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-emerald-100 hover:bg-white/10 transition flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-black/25 flex items-center justify-center font-mono text-[11px]">4</span>
+            <span>Cruza Híbrida</span>
+          </button>
+          <button onclick="goToStep(5)" id="navStep5" class="step-nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-emerald-100 hover:bg-white/10 transition flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-black/25 flex items-center justify-center font-mono text-[11px]">5</span>
+            <span>Swaps Meméticos (100%)</span>
+          </button>
+          <button onclick="goToStep(6)" id="navStep6" class="step-nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-emerald-100 hover:bg-white/10 transition flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-black/25 flex items-center justify-center font-mono text-[11px]">6</span>
+            <span>Fitness y Pesos AHP</span>
+          </button>
+          <button onclick="goToStep(7)" id="navStep7" class="step-nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-emerald-100 hover:bg-white/10 transition flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-black/25 flex items-center justify-center font-mono text-[11px]">7</span>
+            <span>Evolución 2026A</span>
+          </button>
+          <button onclick="goToStep(8)" id="navStep8" class="step-nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-emerald-100 hover:bg-white/10 transition flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-black/25 flex items-center justify-center font-mono text-[11px]">8</span>
+            <span>Automatización 2027A</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- BARRA DE PROGRESO -->
+    <div class="w-full bg-emerald-950 h-1.5">
+      <div id="progressBar" class="bg-uaemex-gold h-1.5 transition-all duration-300" style="width: 12.5%"></div>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
+
+    <!-- BANNER DE CONTEXTO DEL PASO ACTUAL -->
+    <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="space-y-1">
+        <div class="flex items-center gap-2">
+          <span id="stepBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-uaemex-mint text-uaemex-green border border-uaemex-green/20">
+            PASO 1 DE 8 • PROBLEMA UCTP Y CAMPUS FÍSICO
+          </span>
+          <span id="stepComplexityTag" class="text-xs font-mono text-slate-500">NP-Hard • Ω = 34⁶⁸¹ ≈ 10¹⁰⁴³</span>
+        </div>
+        <h2 id="stepTitle" class="text-xl sm:text-2xl font-extrabold text-slate-900">
+          1. El Problema UCTP en la Facultad de Economía y Distancias Peatonales Efectivas
+        </h2>
+        <p id="stepSubtitle" class="text-sm text-slate-600 max-w-3xl">
+          Explora las 372 Unidades de Aprendizaje, las 34 aulas distribuidas en 4 edificios sobre el Cerro de Coatepec y simula el cálculo de distancia peatonal efectiva con penalización biomecánica vertical de 15 m por piso.
+        </p>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <button onclick="prevStep()" id="btnPrevStep" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition disabled:opacity-40">
+          ← Anterior
+        </button>
+        <button onclick="nextStep()" id="btnNextStep" class="px-4 py-2 rounded-xl text-xs font-bold bg-uaemex-green hover:bg-uaemex-dark text-white transition shadow-sm">
+          Siguiente Paso →
+        </button>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- PASO 1: EL PROBLEMA UCTP, INFRAESTRUCTURA Y DISTANCIAS PEATONALES   -->
+    <!-- =================================================================== -->
+    <section id="stepView1" class="step-section space-y-6">
+      <!-- KPIs de Escala Operativa 2026A -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500">Licenciaturas</div>
+          <div class="text-2xl font-extrabold text-uaemex-green mt-1">5</div>
+          <div class="text-[11px] text-slate-500 mt-1 font-mono">ACT, ECO, NIB, REI, REID</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500">Materias-Grupo</div>
+          <div class="text-2xl font-extrabold text-uaemex-green mt-1">372</div>
+          <div class="text-[11px] text-slate-500 mt-1">Hoja oficial 'Completa '</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500">Sesiones Presenciales</div>
+          <div class="text-2xl font-extrabold text-uaemex-green mt-1">681</div>
+          <div class="text-[11px] text-slate-500 mt-1">+100 MT y 93 SEDUCA</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500">Espacios Físicos</div>
+          <div class="text-2xl font-extrabold text-uaemex-green mt-1">34</div>
+          <div class="text-[11px] text-slate-500 mt-1">26 Teóricas + 8 Cómputo</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500">Espacio de Búsqueda</div>
+          <div class="text-2xl font-extrabold text-amber-600 mt-1 font-mono">10¹⁰⁴³</div>
+          <div class="text-[11px] text-slate-500 mt-1">34⁶⁸¹ vs 10⁸⁰ átomos</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500">Brechas MT Reparadas</div>
+          <div class="text-2xl font-extrabold text-emerald-600 mt-1">9 / 9</div>
+          <div class="text-[11px] text-slate-500 mt-1">Ventana traslado ≥ 2h</div>
+        </div>
+      </div>
+
+      <!-- Simulador de Distancias Peatonales Efectivas en el Campus -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Panel Izquierdo: Mapa Topológico del Campus y Controles -->
+        <div class="lg:col-span-7 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-bold text-slate-900">Simulador de Distancia Peatonal Efectiva (Regla de Naismith / Tobler)</h3>
+              <p class="text-xs text-slate-500">Selecciona dos aulas cualesquiera para calcular su distancia horizontal entre edificios y penalización vertical por escaleras.</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-xs font-mono font-semibold">
+              +15.0 m / piso
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="selectAulaOrigen" class="block text-xs font-bold text-slate-700 mb-1">Aula Origen (a₁):</label>
+              <select id="selectAulaOrigen" onchange="updateDistanceSim()" class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-uaemex-green"></select>
+            </div>
+            <div>
+              <label for="selectAulaDestino" class="block text-xs font-bold text-slate-700 mb-1">Aula Destino (a₂):</label>
+              <select id="selectAulaDestino" onchange="updateDistanceSim()" class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-uaemex-green"></select>
+            </div>
+          </div>
+
+          <!-- Botones rápidos de ejemplos del Notebook -->
+          <div class="flex flex-wrap items-center gap-2 pt-1">
+            <span class="text-[11px] font-semibold text-slate-500">Casos del Notebook:</span>
+            <button onclick="setDistancePreset('A17', 'A24')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 hover:bg-uaemex-mint hover:text-uaemex-green transition">
+              Intra-Edificio D (A17 PB → A24 Piso 4 = 45 m)
+            </button>
+            <button onclick="setDistancePreset('A1', 'A12')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 hover:bg-uaemex-mint hover:text-uaemex-green transition">
+              Inter-Edificio B→C PB (A1 → A12 = 35 m)
+            </button>
+            <button onclick="setDistancePreset('A1', 'SC_G')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 hover:bg-uaemex-mint hover:text-uaemex-green transition">
+              Máxima Dispersión (A1 Edif B → SC_G Edif D P4 = 110 m)
+            </button>
+          </div>
+
+          <!-- Esquema SVG Interactivo de los 5 Edificios (Cerro de Coatepec) -->
+          <div class="bg-slate-900 rounded-xl p-4 text-white relative overflow-hidden">
+            <div class="flex items-center justify-between text-xs text-slate-300 mb-2">
+              <span class="font-semibold text-uaemex-gold">Topología Geodésica • Cerro de Coatepec (Ciudad Universitaria)</span>
+              <span id="svgRouteLabel" class="font-mono text-emerald-300">Ruta activa: Edif B → Edif D</span>
+            </div>
+            <svg id="campusSvg" viewBox="0 0 650 230" class="w-full h-auto">
+              <!-- Andadores peatonales base -->
+              <line x1="85" y1="115" x2="215" y2="75" stroke="#334155" stroke-width="3" stroke-dasharray="5,5" />
+              <line x1="215" y1="75" x2="355" y2="115" stroke="#334155" stroke-width="3" stroke-dasharray="5,5" />
+              <line x1="355" y1="115" x2="535" y2="75" stroke="#334155" stroke-width="3" stroke-dasharray="5,5" />
+              <line x1="355" y1="115" x2="495" y2="180" stroke="#334155" stroke-width="3" stroke-dasharray="5,5" />
+              <line x1="215" y1="75" x2="535" y2="75" stroke="#334155" stroke-width="2" stroke-dasharray="4,4" />
+              <line x1="85" y1="115" x2="495" y2="180" stroke="#334155" stroke-width="2" stroke-dasharray="4,4" />
+
+              <!-- Línea dinámica de ruta activa -->
+              <line id="svgActiveLine" x1="215" y1="75" x2="535" y2="75" stroke="#c59b27" stroke-width="5" stroke-linecap="round" />
+
+              <!-- Nodo Edificio A -->
+              <g transform="translate(30, 80)">
+                <rect id="nodeEdifA" width="110" height="70" rx="10" fill="#1e293b" stroke="#64748b" stroke-width="2" />
+                <text x="55" y="25" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="bold">EDIFICIO A</text>
+                <text x="55" y="42" text-anchor="middle" fill="#e2e8f0" font-size="10">Gobierno / Cubículos</text>
+                <text x="55" y="58" text-anchor="middle" fill="#64748b" font-size="9">0 aulas clase</text>
+              </g>
+
+              <!-- Nodo Edificio B -->
+              <g transform="translate(160, 35)">
+                <rect id="nodeEdifB" width="120" height="80" rx="10" fill="#1b4d3e" stroke="#c59b27" stroke-width="3" />
+                <text x="60" y="24" text-anchor="middle" fill="#facc15" font-size="12" font-weight="bold">EDIFICIO B</text>
+                <text x="60" y="42" text-anchor="middle" fill="#ffffff" font-size="10">A1-A11 + Cubículos PTC</text>
+                <text x="60" y="58" text-anchor="middle" fill="#a7f3d0" font-size="9">11 Aulas Teóricas (3 niveles)</text>
+                <text x="60" y="71" text-anchor="middle" fill="#fde68a" font-size="9">Rango Edad: 0 (Preferente)</text>
+              </g>
+
+              <!-- Nodo Edificio C -->
+              <g transform="translate(300, 80)">
+                <rect id="nodeEdifC" width="120" height="80" rx="10" fill="#1e293b" stroke="#64748b" stroke-width="2" />
+                <text x="60" y="24" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">EDIFICIO C</text>
+                <text x="60" y="42" text-anchor="middle" fill="#ffffff" font-size="10">A12-A16, LK, LC + SC_C/D</text>
+                <text x="60" y="58" text-anchor="middle" fill="#cbd5e1" font-size="9">7 Teóricas + 2 Cómputo</text>
+                <text x="60" y="71" text-anchor="middle" fill="#94a3b8" font-size="9">Rango Edad: 1 (Central)</text>
+              </g>
+
+              <!-- Nodo Edificio D -->
+              <g transform="translate(475, 25)">
+                <rect id="nodeEdifD" width="145" height="90" rx="10" fill="#1e293b" stroke="#64748b" stroke-width="2" />
+                <text x="72" y="24" text-anchor="middle" fill="#f472b6" font-size="12" font-weight="bold">EDIFICIO D (TORRE)</text>
+                <text x="72" y="42" text-anchor="middle" fill="#ffffff" font-size="10">A17-A24 + Salas SC_E, F, G</text>
+                <text x="72" y="58" text-anchor="middle" fill="#cbd5e1" font-size="9">8 Teóricas + 3 Cómputo</text>
+                <text x="72" y="73" text-anchor="middle" fill="#fda4af" font-size="9">Hasta 4 Pisos • Rango Edad: 2</text>
+              </g>
+
+              <!-- Nodo Edificio E -->
+              <g transform="translate(445, 140)">
+                <rect id="nodeEdifE" width="145" height="75" rx="10" fill="#1e293b" stroke="#64748b" stroke-width="2" />
+                <text x="72" y="22" text-anchor="middle" fill="#c084fc" font-size="12" font-weight="bold">EDIFICIO E (CÓMPUTO)</text>
+                <text x="72" y="40" text-anchor="middle" fill="#ffffff" font-size="10">Salas SC_H, SC_I, SC_J</text>
+                <text x="72" y="56" text-anchor="middle" fill="#cbd5e1" font-size="9">3 Salas Cómputo (3 niveles)</text>
+                <text x="72" y="68" text-anchor="middle" fill="#d8b4fe" font-size="9">Rango Edad: 3</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Panel Derecho: Resultado del Cálculo y Matriz Geodésica -->
+        <div class="lg:col-span-5 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
+          <div class="space-y-4">
+            <div class="bg-uaemex-mint/70 border border-uaemex-green/20 rounded-xl p-4">
+              <div class="text-xs font-bold uppercase tracking-wider text-uaemex-green">Fórmula de Distancia Peatonal Efectiva</div>
+              <div class="font-mono text-xs sm:text-sm text-slate-900 mt-1.5 bg-white/90 p-2.5 rounded-lg border border-slate-200">
+                d_ef(a₁, a₂) = D_edif(E₁, E₂) + 15.0 × |piso(a₁) - piso(a₂)|
+              </div>
+
+              <div class="grid grid-cols-3 gap-2 mt-3 text-center">
+                <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                  <div class="text-[11px] text-slate-500">Horizontal (D_edif)</div>
+                  <div id="distHorizVal" class="text-lg font-extrabold text-slate-800 font-mono">65 m</div>
+                  <div id="distHorizSub" class="text-[10px] text-slate-500">Edif B ↔ Edif D</div>
+                </div>
+                <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                  <div class="text-[11px] text-slate-500">Vertical (Δh)</div>
+                  <div id="distVertVal" class="text-lg font-extrabold text-amber-600 font-mono">45 m</div>
+                  <div id="distVertSub" class="text-[10px] text-slate-500">|1 - 4| × 15m</div>
+                </div>
+                <div class="bg-uaemex-green text-white p-2.5 rounded-lg shadow">
+                  <div class="text-[11px] text-emerald-100">Total Efectiva</div>
+                  <div id="distTotalVal" class="text-xl font-extrabold text-uaemex-gold font-mono">110 m</div>
+                  <div id="distTimeSub" class="text-[10px] text-emerald-100">~92 seg en cambio</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Justificación Biomecánica -->
+            <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200 space-y-1.5 text-xs text-slate-700">
+              <div class="font-bold text-slate-900">¿Por qué 15.0 metros equivalentes por cada piso?</div>
+              <p>• <strong>Gasto Metabólico (Naismith/Tobler):</strong> Subir un piso (3.2 m de desnivel, 18-20 escalones) consume <strong>4.7× más energía</strong> que caminar en plano: <code class="font-mono bg-white px-1 rounded">3.2 m × 4.7 ≈ 15.0 m</code>.</p>
+              <p>• <strong>Congestión en Hora Pico:</strong> En cambios de clase (09:00, 11:00, 13:00), la velocidad en escaleras cae a 0.4 m/s (25–40 s por piso), equivalente a recorrer 15–20 m en llano.</p>
+              <p>• <strong>Precomputación Tensorial:</strong> La matriz completa <code class="font-mono bg-white px-1 rounded">D_aula ∈ ℝ³⁴ˣ³⁴</code> (1,156 pares) se precalcula en NumPy al iniciar y evalúa 100 horarios en <strong>&lt; 5 ms</strong>.</p>
+            </div>
+          </div>
+
+          <!-- Tabla Matriz de Distancias entre Edificios -->
+          <div>
+            <div class="text-xs font-bold text-slate-700 mb-2">Matriz Geodésica D_edif (metros sobre andadores reales)</div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-center border-collapse">
+                <thead>
+                  <tr class="bg-slate-100 text-slate-700 font-bold">
+                    <th class="p-1.5 border border-slate-200 text-left">Origen \ Dest</th>
+                    <th class="p-1.5 border border-slate-200">Edif A</th>
+                    <th class="p-1.5 border border-slate-200">Edif B</th>
+                    <th class="p-1.5 border border-slate-200">Edif C</th>
+                    <th class="p-1.5 border border-slate-200">Edif D</th>
+                    <th class="p-1.5 border border-slate-200">Edif E</th>
+                  </tr>
+                </thead>
+                <tbody class="font-mono text-[11px]">
+                  <tr><td class="p-1.5 border border-slate-200 font-sans font-semibold text-left">Edif A (Gob)</td><td class="p-1.5 border border-slate-200 bg-slate-50">0m</td><td class="p-1.5 border border-slate-200">30m</td><td class="p-1.5 border border-slate-200">55m</td><td class="p-1.5 border border-slate-200">70m</td><td class="p-1.5 border border-slate-200">35m</td></tr>
+                  <tr><td class="p-1.5 border border-slate-200 font-sans font-semibold text-left">Edif B (PTC)</td><td class="p-1.5 border border-slate-200">30m</td><td class="p-1.5 border border-slate-200 bg-slate-50">0m</td><td class="p-1.5 border border-slate-200">35m</td><td class="p-1.5 border border-slate-200">65m</td><td class="p-1.5 border border-slate-200">50m</td></tr>
+                  <tr><td class="p-1.5 border border-slate-200 font-sans font-semibold text-left">Edif C (Central)</td><td class="p-1.5 border border-slate-200">55m</td><td class="p-1.5 border border-slate-200">35m</td><td class="p-1.5 border border-slate-200 bg-slate-50">0m</td><td class="p-1.5 border border-slate-200">35m</td><td class="p-1.5 border border-slate-200">40m</td></tr>
+                  <tr><td class="p-1.5 border border-slate-200 font-sans font-semibold text-left">Edif D (Torre)</td><td class="p-1.5 border border-slate-200">70m</td><td class="p-1.5 border border-slate-200">65m</td><td class="p-1.5 border border-slate-200">35m</td><td class="p-1.5 border border-slate-200 bg-slate-50">0m</td><td class="p-1.5 border border-slate-200">40m</td></tr>
+                  <tr><td class="p-1.5 border border-slate-200 font-sans font-semibold text-left">Edif E (Cómputo)</td><td class="p-1.5 border border-slate-200">35m</td><td class="p-1.5 border border-slate-200">50m</td><td class="p-1.5 border border-slate-200">40m</td><td class="p-1.5 border border-slate-200">40m</td><td class="p-1.5 border border-slate-200 bg-slate-50">0m</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- PASO 2: CODIFICACIÓN GENÉTICA E INVARIANTE DE DOMINIOS ADMISIBLES   -->
+    <!-- =================================================================== -->
+    <section id="stepView2" class="step-section hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Explicación del Genoma y Mapeo Biológico -->
+        <div class="lg:col-span-5 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+          <h3 class="text-base font-bold text-slate-900">Mapeo Biológico y Representación Cromosómica</h3>
+          <p class="text-xs text-slate-600">
+            Cada individuo de la población <code class="font-mono bg-slate-100 px-1 rounded">Pop ∈ ℤ¹⁰⁰ˣ⁶⁸¹</code> es un vector entero de 681 genes, donde el gen <code class="font-mono bg-slate-100 px-1 rounded">cᵢ ∈ {0, ..., 33}</code> indica el aula física asignada a la sesión presencial <code class="font-mono">i</code>.
+          </p>
+
+          <!-- Visualización de un Cromosoma de Ejemplo -->
+          <div class="bg-slate-900 text-white p-3.5 rounded-xl space-y-2">
+            <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+              <span>Cromosoma c = [c₁, c₂, ..., c₆₈₁]</span>
+              <span class="text-uaemex-gold">P = 100 individuos</span>
+            </div>
+            <div class="grid grid-cols-6 gap-1.5 font-mono text-center text-xs">
+              <div class="bg-emerald-900/70 border border-emerald-500/40 p-1.5 rounded">
+                <div class="text-[9px] text-emerald-300">Sesión 1</div>
+                <div class="font-bold text-white">A1 (0)</div>
+              </div>
+              <div class="bg-emerald-900/70 border border-emerald-500/40 p-1.5 rounded">
+                <div class="text-[9px] text-emerald-300">Sesión 2</div>
+                <div class="font-bold text-white">A6 (5)</div>
+              </div>
+              <div class="bg-sky-900/70 border border-sky-500/40 p-1.5 rounded">
+                <div class="text-[9px] text-sky-300">Sesión 3</div>
+                <div class="font-bold text-white">SC_C (26)</div>
+              </div>
+              <div class="bg-emerald-900/70 border border-emerald-500/40 p-1.5 rounded">
+                <div class="text-[9px] text-emerald-300">Sesión 4</div>
+                <div class="font-bold text-white">A14 (13)</div>
+              </div>
+              <div class="bg-slate-800 p-1.5 rounded flex items-center justify-center text-slate-400">...</div>
+              <div class="bg-emerald-900/70 border border-emerald-500/40 p-1.5 rounded">
+                <div class="text-[9px] text-emerald-300">Sesión 681</div>
+                <div class="font-bold text-white">A17 (18)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <div class="p-3 rounded-xl bg-red-50 border border-red-200 text-red-900">
+              <div class="font-bold">¿Por qué falla un AG clásico sin invariante?</div>
+              <p class="mt-0.5 text-[11px]">En la hoja manual original había <strong>41 sesiones con sobrecupo (H₂ = 41)</strong> y <strong>2 clases en tipo de aula erróneo (H₃ = 2)</strong>. Un AG clásico pierde 90% del tiempo penalizando grupos de 45 alumnos metidos en salones de 22.</p>
+            </div>
+            <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900">
+              <div class="font-bold">Invariante de Dominios Admisibles (Aᵢ)</div>
+              <p class="mt-0.5 text-[11px]">Al inicializar, cruzar y mutar, el gen <code class="font-mono">cᵢ</code> se extrae <strong>exclusivamente</strong> de su dominio precalculado <code class="font-mono">Aᵢ</code>. Así, <strong>H₂(c) ≡ 0</strong> y <strong>H₃(c) ≡ 0</strong> por construcción matemática en el 100% de las generaciones.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulador Interactivo del Dominio Admisible A_i -->
+        <div class="lg:col-span-7 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-bold text-slate-900">Simulador Interactivo de Filtrado de Dominio Factible (Aᵢ)</h3>
+              <p class="text-xs text-slate-500">Modifica la matrícula del grupo y el requerimiento técnico para ver cómo se filtra el catálogo de 34 espacios.</p>
+            </div>
+            <span id="domainCountBadge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-uaemex-green text-white">
+              5 / 34 aulas admisibles
+            </span>
+          </div>
+
+          <!-- Controles de la Sesión Simulada -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <div>
+              <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                <label for="sliderInscritos">Matrícula Inscrita (inscritosᵢ):</label>
+                <span id="labelInscritosVal" class="font-mono text-uaemex-green text-sm">42 alumnos</span>
+              </div>
+              <input id="sliderInscritos" type="range" min="15" max="48" value="42" oninput="updateDomainSim()" class="w-full accent-uaemex-green cursor-pointer" />
+              <div class="flex justify-between text-[10px] text-slate-400 font-mono mt-1">
+                <span>15 alum</span>
+                <span>22 (A18-20)</span>
+                <span>36 (Estándar)</span>
+                <span>48 (Máx A1-A4, A17)</span>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Tipo de Espacio Requerido (tipo_reqᵢ):</label>
+              <div class="grid grid-cols-2 gap-2">
+                <button id="btnTipoTeorica" onclick="setDomainTipo('Aula_Teorica')" class="px-3 py-2 rounded-xl text-xs font-bold bg-uaemex-green text-white border border-uaemex-green transition">
+                  Aula Teórica (26)
+                </button>
+                <button id="btnTipoComputo" onclick="setDomainTipo('Sala_Computo')" class="px-3 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition">
+                  Sala Cómputo (8)
+                </button>
+              </div>
+              <div class="mt-2 flex flex-wrap gap-1.5">
+                <button onclick="setDomainPreset('micro')" class="text-[11px] px-2 py-0.5 rounded bg-white border border-slate-300 hover:border-uaemex-green text-slate-700">
+                  Ej. Microeconomía I (42, Teórica)
+                </button>
+                <button onclick="setDomainPreset('econometria')" class="text-[11px] px-2 py-0.5 rounded bg-white border border-slate-300 hover:border-uaemex-green text-slate-700">
+                  Ej. Econometría (38, Cómputo)
+                </button>
+                <button onclick="setDomainPreset('algebra')" class="text-[11px] px-2 py-0.5 rounded bg-white border border-slate-300 hover:border-uaemex-green text-slate-700">
+                  Ej. Álgebra NIB (20, Teórica)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="domainPresetTitle" class="text-xs font-semibold text-slate-700 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg">
+            Caso activo: Microeconomía I (ACT) — 42 estudiantes • Requiere Aula_Teorica
+          </div>
+
+          <!-- Cuadrícula Visual de las 34 Aulas -->
+          <div id="domainRoomsGrid" class="grid grid-cols-3 sm:grid-cols-6 gap-2"></div>
+
+          <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 pt-1 border-t border-slate-100">
+            <div class="flex items-center gap-3">
+              <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-emerald-600 inline-block"></span> En Dominio Aᵢ (Factible)</span>
+              <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-rose-100 border border-rose-300 inline-block"></span> Descartada por Capacidad (H₂)</span>
+              <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-slate-100 border border-slate-300 inline-block"></span> Descartada por Tipo (H₃)</span>
+            </div>
+            <span id="domainFormulaText" class="font-mono text-slate-700 font-semibold">H₂ = 0 | H₃ = 0 garantizado</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- PASO 3: VECTORIZACIÓN MATRICIAL 3D EN NUMPY                         -->
+    <!-- =================================================================== -->
+    <section id="stepView3" class="step-section hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Comparativa de Velocidad y Explicación del Broadcasting -->
+        <div class="lg:col-span-5 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+          <h3 class="text-base font-bold text-slate-900">Superando el Cuello de Botella del Bucle For en Python</h3>
+          <p class="text-xs text-slate-600">
+            Evaluar colisiones de aula (<code class="font-mono">H₁</code>) en 681 sesiones implica verificar <code class="font-mono">C(681, 2) = 231,540</code> pares por individuo. En 100 individuos y 150 generaciones son <strong>3.47 × 10⁹ comparaciones</strong>.
+          </p>
+
+          <!-- Comparador de Tiempo -->
+          <div class="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <div>
+              <div class="flex justify-between text-xs font-bold text-rose-700 mb-1">
+                <span>Bucle For Anidado (Python Estándar)</span>
+                <span class="font-mono">~8.00 s / gen (20 min total)</span>
+              </div>
+              <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
+                <div class="bg-rose-600 h-3 rounded-full" style="width: 100%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs font-bold text-uaemex-green mb-1">
+                <span>Broadcasting Tensorial 3D (NumPy C/SIMD)</span>
+                <span class="font-mono">0.12 s / gen (18.71 s total)</span>
+              </div>
+              <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
+                <div class="bg-uaemex-green h-3 rounded-full" style="width: 2%"></div>
+              </div>
+            </div>
+            <div class="text-[11px] font-bold text-emerald-800 bg-emerald-100/80 px-2.5 py-1 rounded text-center">
+              Aceleración Computacional: &gt; 60× más rápido (&lt; 20 ms para evaluar H₁ en los 100 individuos)
+            </div>
+          </div>
+
+          <!-- Código Real del Notebook -->
+          <div class="bg-slate-900 text-slate-100 p-4 rounded-xl font-mono text-[11px] space-y-1.5 overflow-x-auto">
+            <div class="text-emerald-400"># Detección vectorial 3D de colisiones (H1) para P=100 individuos:</div>
+            <div><span class="text-amber-300">same_room</span> = (pop_matrix[:, :, <span class="text-purple-400">None</span>] == pop_matrix[:, <span class="text-purple-400">None</span>, :]) &amp; self.overlap_matrix[<span class="text-purple-400">None</span>, :, :]</div>
+            <div><span class="text-amber-300">h1</span> = np.count_nonzero(same_room, axis=(<span class="text-sky-400">1</span>, <span class="text-sky-400">2</span>)) // <span class="text-sky-400">2</span></div>
+            <div class="text-emerald-400 pt-2"># Indexación tensorial de caminata docente (S1):</div>
+            <div><span class="text-amber-300">s1</span> = self.dist_aulas_matrix[pop_matrix[:, doc_p[:, <span class="text-sky-400">0</span>]], pop_matrix[:, doc_p[:, <span class="text-sky-400">1</span>]]].sum(axis=<span class="text-sky-400">1</span>)</div>
+          </div>
+        </div>
+
+        <!-- Laboratorio Interactivo del Tensor 3D (SameRoom & Overlap) -->
+        <div class="lg:col-span-7 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-bold text-slate-900">Simulador en Vivo del Producto Lógico Tensorial</h3>
+              <p class="text-xs text-slate-500">Cambia el aula asignada a cualquiera de estas 5 sesiones para observar cómo NumPy detecta colisiones al instante cruzando <code class="font-mono">SameRoom</code> ∧ <code class="font-mono">Overlap</code>.</p>
+            </div>
+            <div id="tensorH1Badge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-600 text-white font-mono">
+              H₁ = 0 colisiones
+            </div>
+          </div>
+
+          <!-- Sesiones de prueba para el mini-tensor -->
+          <div id="tensorSessionsList" class="grid grid-cols-1 sm:grid-cols-5 gap-2"></div>
+
+          <div class="flex flex-wrap gap-2">
+            <button onclick="provokeTensorCollision()" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition">
+              ⚡ Provocar Colisión en Lunes 11:00
+            </button>
+            <button onclick="resolveTensorCollisions()" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 transition">
+              ✓ Resolver Colisiones (H₁ = 0)
+            </button>
+          </div>
+
+          <!-- Visualización de las 3 Matrices 5x5 -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <div class="text-xs font-bold text-slate-800 text-center mb-1">1. Tensor SameRoom [i, j]</div>
+              <div class="text-[10px] text-slate-500 text-center mb-2 font-mono">pop[:, :, None] == pop[:, None, :]</div>
+              <div id="matrixSameRoom" class="grid grid-cols-5 gap-1 font-mono text-[10px] text-center"></div>
+            </div>
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <div class="text-xs font-bold text-slate-800 text-center mb-1">2. Matriz Estática Overlap [i, j]</div>
+              <div class="text-[10px] text-slate-500 text-center mb-2 font-mono">díaᵢ = díaⱼ ∧ max(ini) &lt; min(fin)</div>
+              <div id="matrixOverlap" class="grid grid-cols-5 gap-1 font-mono text-[10px] text-center"></div>
+            </div>
+            <div class="bg-slate-900 text-white p-3 rounded-xl border border-slate-800">
+              <div class="text-xs font-bold text-uaemex-gold text-center mb-1">3. Colisión Real (AND Lógico)</div>
+              <div class="text-[10px] text-slate-400 text-center mb-2 font-mono">SameRoom &amp; Overlap (i ≠ j)</div>
+              <div id="matrixCollision" class="grid grid-cols-5 gap-1 font-mono text-[10px] text-center"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- PASO 4: OPERADOR DE CRUZA HÍBRIDA ADAPTATIVA                        -->
+    <!-- =================================================================== -->
+    <section id="stepView4" class="step-section hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Explicación del Operador Híbrido -->
+        <div class="lg:col-span-4 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+          <h3 class="text-base font-bold text-slate-900">¿Por qué fracasa el Cruce Clásico de 1 Punto?</h3>
+          <p class="text-xs text-slate-600">
+            Una materia como <em>Cálculo Diferencial (ACT Gpo S1)</em> se imparte Lunes, Miércoles y Viernes de 09:00 a 11:00. Un corte ciego parte las sesiones de la misma asignatura entre el Padre 1 y el Padre 2, mandando al grupo a edificios distintos cada día (<code class="font-mono">S₇ ≫ 0</code>).
+          </p>
+
+          <div class="space-y-2.5 text-xs">
+            <div class="p-3 rounded-xl bg-uaemex-mint border border-uaemex-green/30">
+              <div class="flex items-center justify-between font-bold text-uaemex-green">
+                <span>1. Course-Uniform Crossover</span>
+                <span class="font-mono bg-white px-2 py-0.5 rounded text-[11px]">r &lt; 0.60 (60%)</span>
+              </div>
+              <p class="mt-1 text-[11px] text-slate-700">Agrupa todas las sesiones <code class="font-mono">S_c = {L, Mi, V}</code> de una misma Unidad de Aprendizaje y las hereda en bloque de un mismo progenitor. <strong>Preserva S₇ = 0 (salón fijo toda la semana)</strong>.</p>
+            </div>
+
+            <div class="p-3 rounded-xl bg-sky-50 border border-sky-200">
+              <div class="flex items-center justify-between font-bold text-sky-900">
+                <span>2. Day-Block Crossover</span>
+                <span class="font-mono bg-white px-2 py-0.5 rounded text-[11px]">r ≥ 0.60 (40%)</span>
+              </div>
+              <p class="mt-1 text-[11px] text-slate-700">Agrupa todas las sesiones de un mismo día <code class="font-mono">D_k</code> e intercambia el día entero entre padres. Como cada padre ya era libre de choques en ese día, <strong>preserva bloques con H₁ = 0</strong>.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulador Interactivo de Cruza -->
+        <div class="lg:col-span-8 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-bold text-slate-900">Laboratorio Interactivo de Recombinación Genética</h3>
+              <p class="text-xs text-slate-500">Prueba los 3 métodos de cruza sobre dos progenitores y compara el impacto en estabilidad semanal (S₇) y colisiones (H₁).</p>
+            </div>
+            <button onclick="runRandomCrossover()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-uaemex-gold text-slate-950 hover:bg-amber-400 transition shadow-sm">
+              🎲 Sortear r ~ U(0,1) Automático
+            </button>
+          </div>
+
+          <!-- Selector de Modo de Cruza -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <button id="btnCrossCourse" onclick="setCrossoverMode('course')" class="p-2.5 rounded-xl border text-left transition bg-uaemex-green text-white border-uaemex-green">
+              <div class="text-xs font-bold">Course-Uniform (r &lt; 0.60)</div>
+              <div class="text-[10px] opacity-85">Hereda por curso completo → S₇ = 0</div>
+            </button>
+            <button id="btnCrossDay" onclick="setCrossoverMode('day')" class="p-2.5 rounded-xl border text-left transition bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
+              <div class="text-xs font-bold">Day-Block (r ≥ 0.60)</div>
+              <div class="text-[10px] opacity-75">Hereda por día completo → H₁ = 0</div>
+            </button>
+            <button id="btnCrossOnePoint" onclick="setCrossoverMode('onepoint')" class="p-2.5 rounded-xl border text-left transition bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
+              <div class="text-xs font-bold text-rose-700">Cruce Clásico 1-Punto (Falla)</div>
+              <div class="text-[10px] opacity-75">Rompe cursos a mitad de semana</div>
+            </button>
+          </div>
+
+          <div id="crossoverStatusBanner" class="px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 font-medium flex flex-wrap items-center justify-between gap-2">
+            <span>Modo activo: <strong>Course-Uniform Crossover (Probabilidad 60%)</strong></span>
+            <span class="font-mono font-bold">Resultado Hijo 1: S₇ = 0 cambios de salón | H₁ = 0 colisiones</span>
+          </div>
+
+          <!-- Visualización de Padres e Hijo Resultante -->
+          <div class="space-y-3" id="crossoverTablesContainer"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- PASO 5: BÚSQUEDA LOCAL MEMÉTICA Y AUGMENTING SWAPS                  -->
+    <!-- =================================================================== -->
+    <section id="stepView5" class="step-section hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- El Problema de Saturación 100% en Horas Pico -->
+        <div class="lg:col-span-5 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800">
+            Cuello de Botella Real: Lunes y Miércoles 11:00 - 13:00 hrs
+          </div>
+          <h3 class="text-base font-bold text-slate-900">Saturación del 100.0% en las 26 Aulas Teóricas</h3>
+          <p class="text-xs text-slate-600">
+            En la franja pico de Lunes y Miércoles de 11:00 a 13:00 hrs coinciden exactamente <strong>26 asignaturas teóricas simultáneas</strong> para las <strong>26 aulas teóricas disponibles</strong>. No existe ni un solo salón vacío (<code class="font-mono">Libres = ∅</code>).
+          </p>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2.5 text-xs">
+            <div class="font-bold text-slate-900">Los 3 Sub-operadores de la Mutación Memética:</div>
+            <div class="p-2.5 rounded-lg bg-white border border-slate-200">
+              <span class="font-bold text-uaemex-green">Sub-operador A (Estabilidad Semanal S₇):</span> Unifica sesiones de una misma materia dispersas en la semana hacia un salón preferente en Edificios B o C.
+            </div>
+            <div class="p-2.5 rounded-lg bg-white border border-slate-200">
+              <span class="font-bold text-uaemex-green">Sub-operador B (Caminata Docente S₁):</span> Para profesores con clases consecutivas (<code class="font-mono">t_fin(e₁) = t_ini(e₂)</code>), acerca la segunda sesión al salón de la primera.
+            </div>
+            <div class="p-2.5 rounded-lg bg-white border border-slate-200">
+              <span class="font-bold text-uaemex-green">Sub-operador C (Jerarquía PTC y Edad S₅/S₆):</span> Intercambia a un PTC o docente mayor asignado en Edificios D/E con un docente joven ubicado en Edificios B/C.
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulador Paso a Paso de Cadena de Intercambio Aumentante (Augmenting Swap) -->
+        <div class="lg:col-span-7 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-bold text-slate-900">Simulador Paso a Paso: Cadena de Intercambio Aumentante (Augmenting Swap)</h3>
+              <p class="text-xs text-slate-500">Inspirado en caminos aumentantes de grafos bipartitos (Hopcroft-Karp / Ford-Fulkerson). Ejecuta los 3 pasos para destrabar el sobrecupo en hora pico.</p>
+            </div>
+          </div>
+
+          <!-- Botones de Fase del Swap -->
+          <div class="grid grid-cols-3 gap-2">
+            <button id="btnSwapPhase0" onclick="setSwapPhase(0)" class="p-2.5 rounded-xl border text-xs font-bold transition bg-rose-600 text-white border-rose-600">
+              Estado Inicial: Bloqueo y Sobrecupo
+            </button>
+            <button id="btnSwapPhase1" onclick="setSwapPhase(1)" class="p-2.5 rounded-xl border text-xs font-bold transition bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
+              Paso 1: Localizar Sesión Puente B
+            </button>
+            <button id="btnSwapPhase2" onclick="setSwapPhase(2)" class="p-2.5 rounded-xl border text-xs font-bold transition bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
+              Paso 2: Ejecutar Cadena de Swap
+            </button>
+          </div>
+
+          <!-- Escenario Visual del Augmenting Swap -->
+          <div id="swapStageBox" class="bg-slate-900 text-white rounded-2xl p-5 space-y-4"></div>
+
+          <!-- Simulador adicional de Sub-operador C (Intercambio PTC/Edad) -->
+          <div class="bg-amber-50/90 border border-amber-200 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="space-y-1 text-xs">
+              <div class="font-bold text-amber-950">Prueba rápida: Sub-operador C (Prioridad PTC y Edad S₅ / S₆)</div>
+              <p id="ptcSwapText" class="text-amber-900">
+                Estado actual: <strong>Dr. Morales (PTC, 64 años)</strong> en <span class="font-mono font-bold text-rose-700">Aula A24 (Edif D, Piso 4)</span> y <strong>Mtro. Ruiz (Asignatura, 29 años)</strong> en <span class="font-mono font-bold text-emerald-800">Aula A2 (Edif B, Planta Baja)</span>.
+              </p>
+            </div>
+            <button id="btnTogglePtcSwap" onclick="togglePtcSwapDemo()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-uaemex-green text-white hover:bg-uaemex-dark transition shrink-0 shadow">
+              Aplicar Swap PTC / Edad
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- PASO 6: FUNCIÓN OBJETIVO, MATRIZ AHP DE SAATY Y CALCULADORA FITNESS -->
+    <!-- =================================================================== -->
+    <section id="stepView6" class="step-section hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Calculadora Interactiva de Fitness y Factor 0.001 -->
+        <div class="lg:col-span-6 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-bold text-slate-900">Calculadora Interactiva de la Función de Aptitud (Fitness)</h3>
+              <p class="text-xs text-slate-500">Experimenta con las restricciones duras (H₁-H₃), blandas (S₁-S₇) y el factor de escala γ = 0.001.</p>
+            </div>
+            <div class="flex gap-1.5">
+              <button onclick="loadFitnessPreset('manual')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100">
+                Cargar Manual 2026A
+              </button>
+              <button onclick="loadFitnessPreset('gen0')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100">
+                Gen 000
+              </button>
+              <button onclick="loadFitnessPreset('optimo')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100">
+                Óptimo Gen 149
+              </button>
+            </div>
+          </div>
+
+          <!-- Ecuación -->
+          <div class="bg-slate-900 text-white p-3.5 rounded-xl font-mono text-xs text-center space-y-1">
+            <div class="text-uaemex-gold font-bold">Fitness(c) = 1 / (1.0 + P_dura(c) + γ · P_blanda(c))</div>
+            <div id="fitnessLiveFormula" class="text-[11px] text-emerald-300">1 / (1.0 + 0 + 0.001 × 74,086.5) = 0.013318</div>
+          </div>
+
+          <!-- Sliders de Restricciones -->
+          <div class="space-y-2.5 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl bg-rose-50/60 border border-rose-200">
+              <div>
+                <div class="flex justify-between font-bold text-rose-900">
+                  <label for="sliderH1">H₁ Colisiones (×10,000):</label>
+                  <span id="valH1" class="font-mono">0</span>
+                </div>
+                <input id="sliderH1" type="range" min="0" max="10" value="0" oninput="updateFitnessCalc()" class="w-full accent-rose-600 cursor-pointer" />
+              </div>
+              <div>
+                <div class="flex justify-between font-bold text-rose-900">
+                  <label for="sliderH2">H₂ Sobrecupos (×5,000):</label>
+                  <span id="valH2" class="font-mono">0</span>
+                </div>
+                <input id="sliderH2" type="range" min="0" max="45" value="0" oninput="updateFitnessCalc()" class="w-full accent-rose-600 cursor-pointer" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <div>
+                <div class="flex justify-between font-semibold text-slate-700">
+                  <label for="sliderS1">S₁ Caminata Docente (×4.5):</label>
+                  <span id="valS1" class="font-mono text-uaemex-green">1,720 m</span>
+                </div>
+                <input id="sliderS1" type="range" min="1200" max="4000" step="15" value="1720" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
+              </div>
+              <div>
+                <div class="flex justify-between font-semibold text-slate-700">
+                  <label for="sliderS2">S₂ Caminata Alumnos (×2.5):</label>
+                  <span id="valS2" class="font-mono text-uaemex-green">13,100 m</span>
+                </div>
+                <input id="sliderS2" type="range" min="10000" max="18000" step="50" value="13100" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
+              </div>
+              <div>
+                <div class="flex justify-between font-semibold text-slate-700">
+                  <label for="sliderS5">S₅ PTC fuera B/C (×220.0):</label>
+                  <span id="valS5" class="font-mono text-uaemex-green">32 ses</span>
+                </div>
+                <input id="sliderS5" type="range" min="0" max="80" value="32" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
+              </div>
+              <div>
+                <div class="flex justify-between font-semibold text-slate-700">
+                  <label for="sliderS7">S₇ Cambio Salón Sem. (×180.0):</label>
+                  <span id="valS7" class="font-mono text-uaemex-green">14 cambios</span>
+                </div>
+                <input id="sliderS7" type="range" min="0" max="60" value="14" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
+              </div>
+            </div>
+
+            <!-- Toggle del factor 0.001 -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-amber-50 border border-amber-200">
+              <div>
+                <div class="font-bold text-amber-950">Factor de Escala Selectiva (γ = 0.001)</div>
+                <div class="text-[11px] text-amber-800">Evita el desvanecimiento del gradiente en el torneo (diferencias de 10⁻⁸ sin γ).</div>
+              </div>
+              <label class="inline-flex items-center gap-2 cursor-pointer">
+                <input id="chkGammaFactor" type="checkbox" checked onchange="updateFitnessCalc()" class="w-4 h-4 accent-uaemex-green rounded" />
+                <span class="font-mono font-bold text-xs text-slate-900">Activar γ=0.001</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Tarjetas de Salida del Fitness -->
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="p-3 rounded-xl bg-slate-100 border border-slate-200">
+              <div class="text-[11px] text-slate-500">Penalización Dura</div>
+              <div id="outPenDura" class="text-base font-extrabold text-slate-800 font-mono">0</div>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-100 border border-slate-200">
+              <div class="text-[11px] text-slate-500">Penalización Blanda</div>
+              <div id="outPenBlanda" class="text-base font-extrabold text-slate-800 font-mono">74,087</div>
+            </div>
+            <div class="p-3 rounded-xl bg-uaemex-green text-white shadow">
+              <div class="text-[11px] text-emerald-100">Fitness Final f(c)</div>
+              <div id="outFitnessVal" class="text-lg font-extrabold text-uaemex-gold font-mono">0.013318</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calibración AHP de Saaty y Tasas Marginales de Sustitución -->
+        <div class="lg:col-span-6 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-bold text-slate-900">Proceso de Jerarquía Analítica (AHP de Saaty)</h3>
+              <p class="text-xs text-slate-500">Calibración formal en 3 etapas: Matriz de Saaty → Homogeneización (α = 75,000) → Grid Search.</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-emerald-100 text-emerald-800">
+              CR = 0.053 &lt; 0.10 ✓
+            </span>
+          </div>
+
+          <!-- Tabla de Pesos AHP y Homogeneización Dimensional -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold">
+                  <th class="p-2 border border-slate-200">Criterio Blando (S_k)</th>
+                  <th class="p-2 border border-slate-200 text-center">Vector Propio ω_k</th>
+                  <th class="p-2 border border-slate-200 text-center">Valor Basal S̄_k</th>
+                  <th class="p-2 border border-slate-200 text-center">Peso Final W_k</th>
+                </tr>
+              </thead>
+              <tbody class="font-mono text-[11px]">
+                <tr>
+                  <td class="p-2 border border-slate-200 font-sans font-bold text-uaemex-green">S₅ Prioridad PTC en Edif B/C</td>
+                  <td class="p-2 border border-slate-200 text-center font-bold">0.370 (37.0%)</td>
+                  <td class="p-2 border border-slate-200 text-center">125 ses</td>
+                  <td class="p-2 border border-slate-200 text-center font-bold bg-emerald-50">220.0</td>
+                </tr>
+                <tr>
+                  <td class="p-2 border border-slate-200 font-sans font-bold text-sky-800">S₇ Salón Fijo en la Semana</td>
+                  <td class="p-2 border border-slate-200 text-center font-bold">0.311 (31.1%)</td>
+                  <td class="p-2 border border-slate-200 text-center">130 cambios</td>
+                  <td class="p-2 border border-slate-200 text-center font-bold bg-sky-50">180.0</td>
+                </tr>
+                <tr>
+                  <td class="p-2 border border-slate-200 font-sans font-semibold">S₁ Distancia Peatonal Docente</td>
+                  <td class="p-2 border border-slate-200 text-center">0.126 (12.6%)</td>
+                  <td class="p-2 border border-slate-200 text-center">2,100 m</td>
+                  <td class="p-2 border border-slate-200 text-center font-bold">4.5</td>
+                </tr>
+                <tr>
+                  <td class="p-2 border border-slate-200 font-sans font-semibold">S₂ Distancia Peatonal Alumnos</td>
+                  <td class="p-2 border border-slate-200 text-center">0.076 (7.6%)</td>
+                  <td class="p-2 border border-slate-200 text-center">15,000 m</td>
+                  <td class="p-2 border border-slate-200 text-center font-bold">2.5</td>
+                </tr>
+                <tr>
+                  <td class="p-2 border border-slate-200 font-sans">S₄ Salto de Edificio por Grupo</td>
+                  <td class="p-2 border border-slate-200 text-center">0.048 (4.8%)</td>
+                  <td class="p-2 border border-slate-200 text-center">100 saltos</td>
+                  <td class="p-2 border border-slate-200 text-center font-bold">35.0</td>
+                </tr>
+                <tr>
+                  <td class="p-2 border border-slate-200 font-sans">S₆ Jerarquía de Edad Docente</td>
+                  <td class="p-2 border border-slate-200 text-center">0.048 (4.8%)</td>
+                  <td class="p-2 border border-slate-200 text-center">140 pts</td>
+                  <td class="p-2 border border-slate-200 text-center font-bold">25.0</td>
+                </tr>
+                <tr>
+                  <td class="p-2 border border-slate-200 font-sans text-slate-500">S₃ Subutilización de Butacas</td>
+                  <td class="p-2 border border-slate-200 text-center">0.021 (2.1%)</td>
+                  <td class="p-2 border border-slate-200 text-center">15,000 butacas</td>
+                  <td class="p-2 border border-slate-200 text-center">0.1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Tasas Marginales de Sustitución -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div class="p-3 rounded-xl bg-uaemex-mint/70 border border-uaemex-green/20 text-xs">
+              <div class="font-bold text-uaemex-green">Tasa Marginal: PTC vs Caminata</div>
+              <div class="font-mono text-sm font-extrabold text-slate-900 mt-0.5">W_S5 / W_S1 = 220 / 4.5 = 48.9 m</div>
+              <p class="text-[11px] text-slate-600 mt-1">El modelo prefiere caminar hasta 49 m adicionales con tal de mantener a un PTC en Edificios B o C cerca de su cubículo.</p>
+            </div>
+            <div class="p-3 rounded-xl bg-sky-50 border border-sky-200 text-xs">
+              <div class="font-bold text-sky-900">Tasa Marginal: Salón Fijo vs Caminata</div>
+              <div class="font-mono text-sm font-extrabold text-slate-900 mt-0.5">W_S7 / W_S1 = 180 / 4.5 = 40.0 m</div>
+              <p class="text-[11px] text-slate-600 mt-1">Cambiar de salón a un curso entre días solo se tolera si ahorra más de 40 m de traslado peatonal.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- PASO 7: EVOLUCIÓN EN VIVO 2026A Y AUDITORÍA MANUAL VS OPTIMIZADO    -->
+    <!-- =================================================================== -->
+    <section id="stepView7" class="step-section hidden space-y-6">
+      <!-- Controles del Reproductor de las 150 Generaciones Reales -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Reproductor Evolutivo de las 150 Generaciones Reales (Periodo 2026A)</h3>
+            <p class="text-xs text-slate-500">Recorre la bitácora real de convergencia (<code class="font-mono">Pop=100, N=681 sesiones, t=18.71 s</code>) o reprodúcela automáticamente.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="btnPlayEvo" onclick="togglePlayEvolution()" class="px-4 py-2 rounded-xl text-xs font-bold bg-uaemex-green text-white hover:bg-uaemex-dark transition flex items-center gap-1.5 shadow">
+              <span id="playEvoIcon">▶</span>
+              <span id="playEvoText">Simular Evolución</span>
+            </button>
+            <button onclick="resetEvolution()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+              Reiniciar (Gen 0)
+            </button>
+          </div>
+        </div>
+
+        <!-- Slider de Generación -->
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs font-mono font-bold">
+            <span id="evoGenLabel" class="text-uaemex-green text-sm">Generación: 149 / 149 (Óptimo Convergente)</span>
+            <span id="evoTimeLabel" class="text-slate-500">Tiempo de cómputo acumulado: 18.71 s</span>
+          </div>
+          <input id="sliderEvoGen" type="range" min="0" max="10" value="10" oninput="onSliderEvoChange(this.value)" class="w-full accent-uaemex-green cursor-pointer" />
+          <div class="flex justify-between text-[10px] font-mono text-slate-400">
+            <span>Gen 0</span><span>Gen 15</span><span>Gen 30</span><span>Gen 45</span><span>Gen 60</span><span>Gen 75</span><span>Gen 90</span><span>Gen 105</span><span>Gen 120</span><span>Gen 135</span><span>Gen 149</span>
+          </div>
+        </div>
+
+        <!-- Consola de Telemetría en Tiempo Real -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 pt-1">
+          <div class="p-3 rounded-xl bg-slate-900 text-white">
+            <div class="text-[10px] text-slate-400 uppercase font-mono">Fitness f(c)</div>
+            <div id="teleFit" class="text-lg font-extrabold text-uaemex-gold font-mono">0.013318</div>
+            <div class="text-[10px] text-emerald-400 font-mono">+31.1% vs Gen 0</div>
+          </div>
+          <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
+            <div class="text-[10px] text-emerald-800 uppercase font-bold">H₁, H₂, H₃ (Duras)</div>
+            <div id="teleHard" class="text-lg font-extrabold text-emerald-700 font-mono">0 | 0 | 0</div>
+            <div class="text-[10px] text-emerald-700">Manual tenía H₂=41</div>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="text-[10px] text-slate-500 uppercase font-bold">S₁ Caminata Docente</div>
+            <div id="teleS1" class="text-lg font-extrabold text-slate-900 font-mono">1,720 m</div>
+            <div id="teleS1Sub" class="text-[10px] text-emerald-700 font-semibold">-385 m vs Manual (-18.3%)</div>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="text-[10px] text-slate-500 uppercase font-bold">S₅ PTC fuera de B/C</div>
+            <div id="teleS5" class="text-lg font-extrabold text-slate-900 font-mono">32 ses</div>
+            <div id="teleS5Sub" class="text-[10px] text-emerald-700 font-semibold">82.5% en B/C (151/183)</div>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="text-[10px] text-slate-500 uppercase font-bold">S₆ Costo Edad Docente</div>
+            <div id="teleS6" class="text-lg font-extrabold text-slate-900 font-mono">626.6</div>
+            <div class="text-[10px] text-emerald-700 font-semibold">Manual: 642.3</div>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="text-[10px] text-slate-500 uppercase font-bold">S₇ Cambios Salón Sem</div>
+            <div id="teleS7" class="text-lg font-extrabold text-slate-900 font-mono">14</div>
+            <div class="text-[10px] text-emerald-700 font-semibold">99.6% cursos fijos</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráficas Interactivas Chart.js -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <h4 class="text-xs font-bold text-slate-800 mb-2">1. Curva de Convergencia de Fitness (Gen 0 → 149)</h4>
+          <div class="relative h-64">
+            <canvas id="chartFitness"></canvas>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <h4 class="text-xs font-bold text-slate-800 mb-2">2. Descenso de Caminata Docente S₁ (Metros Semanales)</h4>
+          <div class="relative h-64">
+            <canvas id="chartS1"></canvas>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <h4 class="text-xs font-bold text-slate-800 mb-2">3. Mediana de Edad Docente por Edificio (Criterio S₆)</h4>
+          <div class="relative h-64">
+            <canvas id="chartAgeBuilding"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla Resumen Ejecutivo Manual vs AG Memético -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+        <h4 class="text-sm font-bold text-slate-900 mb-3">Auditoría Cuantitativa Completa: Asignación Manual ('Completa ') vs. AG Memético 2026A</h4>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left border-collapse">
+            <thead>
+              <tr class="bg-uaemex-dark text-white">
+                <th class="p-2.5 border border-slate-300">Indicador / Restricción</th>
+                <th class="p-2.5 border border-slate-300 text-center">Asignación Manual Original</th>
+                <th class="p-2.5 border border-slate-300 text-center">AG Memético Vectorizado 2026A</th>
+                <th class="p-2.5 border border-slate-300">Impacto / Mejora Lograda</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr>
+                <td class="p-2.5 font-semibold">Colisiones de Aula Física (H₁)</td>
+                <td class="p-2.5 text-center font-mono">0</td>
+                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">0</td>
+                <td class="p-2.5 text-emerald-700 font-semibold">100% Factible (0 choques de salón)</td>
+              </tr>
+              <tr class="bg-rose-50/40">
+                <td class="p-2.5 font-semibold">Violaciones de Capacidad / Sobrecupo (H₂)</td>
+                <td class="p-2.5 text-center font-mono font-bold text-rose-700">41 sesiones</td>
+                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">0 sesiones</td>
+                <td class="p-2.5 text-emerald-700 font-bold">-100.0% (Eliminadas todas por Invariante Aᵢ)</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-semibold">Incompatibilidad de Tipo de Aula (H₃)</td>
+                <td class="p-2.5 text-center font-mono text-rose-700">2 sesiones</td>
+                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">0 sesiones</td>
+                <td class="p-2.5 text-emerald-700 font-semibold">-100.0% (100% compatible Teórica / Cómputo)</td>
+              </tr>
+              <tr class="bg-emerald-50/40">
+                <td class="p-2.5 font-semibold">Sesiones PTC en Edificios B o C (S₅)</td>
+                <td class="p-2.5 text-center font-mono">135 / 183 (73.8%)</td>
+                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">151 / 183 (82.5%)</td>
+                <td class="p-2.5 text-emerald-700 font-bold">+16 clases cerca de cubículo (+8.7 pts)</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-semibold">Traslado Peatonal Docente Semanal (S₁)</td>
+                <td class="p-2.5 text-center font-mono">2,105 m</td>
+                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">1,720 m</td>
+                <td class="p-2.5 text-emerald-700 font-semibold">-385 metros semanales (-18.3%)</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-semibold">Traslado Peatonal Estudiantil Semanal (S₂)</td>
+                <td class="p-2.5 text-center font-mono">14,955 m</td>
+                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">13,100 m</td>
+                <td class="p-2.5 text-emerald-700 font-semibold">-1,855 metros semanales (-12.4%)</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-semibold">Cambios de Edificio por Grupo/Día (S₄)</td>
+                <td class="p-2.5 text-center font-mono">252 saltos</td>
+                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">215 saltos</td>
+                <td class="p-2.5 text-emerald-700 font-semibold">-37 transiciones entre edificios (-14.7%)</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-semibold">Inconsistencia Semanal de Salón (S₇)</td>
+                <td class="p-2.5 text-center font-mono">12 cambios</td>
+                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">14 cambios</td>
+                <td class="p-2.5 text-emerald-700 font-semibold">99.6% de cursos con salón fijo toda la semana</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-semibold">Brechas de Traslado Virtual MT &lt; 2h</td>
+                <td class="p-2.5 text-center font-mono text-rose-700">9 violaciones</td>
+                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">0 violaciones</td>
+                <td class="p-2.5 text-emerald-700 font-semibold">100% de respeto a ventana de traslado ≥ 2h</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- PASO 8: AUTOMATIZACIÓN INTEGRAL 2027A Y SIMULADOR REGLA DE ORO      -->
+    <!-- =================================================================== -->
+    <section id="stepView8" class="step-section hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Explicación del Pipeline 2027A -->
+        <div class="lg:col-span-5 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-uaemex-goldlight text-amber-900 border border-amber-300">
+            Hoja de Ruta 2027A • Automatización de Extremo a Extremo
+          </div>
+          <h3 class="text-base font-bold text-slate-900">La "Regla de Oro": Capturar solo Docente y Rango Horario</h3>
+          <p class="text-xs text-slate-600">
+            Para el semestre par <strong>2027A</strong> (379 materias de semestres pares <code class="font-mono">2, 4, 6, 8, 10</code> y 685 sesiones presenciales, tras filtrar 341 materias impares de 2026B), las jefaturas de carrera ya no necesitan armar horarios a mano.
+          </p>
+
+          <div class="bg-amber-50 border-l-4 border-uaemex-gold p-3.5 rounded-r-xl space-y-1 text-xs">
+            <div class="font-extrabold text-amber-950">¡REGLA DE ORO DE LA AUTOMATIZACIÓN!</div>
+            <p class="text-amber-900">Deja las columnas <code class="font-mono font-bold">L, Ma, Mi, J, V, S</code> <strong>TOTALMENTE EN BLANCO</strong> en <code class="font-mono">1_Oferta_Cursos_2027A</code>. El motor constructivo de Fase 1 sintetiza el horario sin choques dentro del <code class="font-mono">RANGO_DOCENTE_LV</code> y la Fase 2 inyecta el aula óptima en 25 segundos.</p>
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <div class="font-bold text-uaemex-green">FASE 1: Motor Constructivo y Reparador de Horarios</div>
+              <p class="text-[11px] text-slate-600 mt-0.5">Resuelve los 8 empalmes docentes por rotación de 92 profesores, asigna horario a los 5 cursos nuevos del plan <code class="font-mono">LNIB-F26</code> y repara las 5 brechas MT &lt; 2h.</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <div class="font-bold text-uaemex-green">FASE 2: Motor Genético Memético + Portal SHA-256</div>
+              <p class="text-[11px] text-slate-600 mt-0.5">Asigna las 34 aulas a las 685 sesiones de 2027A logrando <strong>91.9% de PTC en Edificios B/C</strong> y <strong>98.5% de estabilidad semanal</strong>, inyecta en Excel preservando <code class="font-mono">'Mapeo'</code> y <code class="font-mono">'PUERTAS'</code>, y publica el portal web protegido con SHA-256.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulador Interactivo de la Plantilla Excel 2027A + Daemon Watchdog -->
+        <div class="lg:col-span-7 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-bold text-slate-900">Simulador en Vivo: Plantilla_Entrada_Planta_2027A.xlsx</h3>
+              <p class="text-xs text-slate-500">Configura una nueva asignatura con columnas L-S vacías y presiona <strong>Guardar (Ctrl + G)</strong> para disparar el demonio <code class="font-mono">Vigilar_Cambios_Excel_2027A.bat</code>.</p>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="reset2027Simulator()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                Vaciar L-S (Estado Captura)
+              </button>
+              <button onclick="run2027PipelineSim()" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-uaemex-green text-white hover:bg-uaemex-dark transition shadow flex items-center gap-1.5">
+                <span>💾 Guardar (Ctrl+G) y Optimizar</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Formulario de Captura de nueva fila en Hoja 1 -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs">
+            <div>
+              <label for="inp2027Materia" class="block text-[10px] font-bold text-slate-500 uppercase">Unidad de Aprendizaje</label>
+              <select id="inp2027Materia" onchange="render2027Table()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-1.5 font-semibold text-slate-800">
+                <option value="Microeconomía II (LEC Sem 4)">Microeconomía II (LEC S4)</option>
+                <option value="Comercio Digital (Plan LNIB-F26)">Comercio Digital (LNIB-F26)</option>
+                <option value="Cálculo Actuarial II (ACT Sem 4)">Cálculo Actuarial II (ACT S4)</option>
+              </select>
+            </div>
+            <div>
+              <label for="inp2027Docente" class="block text-[10px] font-bold text-slate-500 uppercase">Docente y Perfil (Hoja 2)</label>
+              <select id="inp2027Docente" onchange="render2027Table()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-1.5 font-semibold text-slate-800">
+                <option value="PTC_61">Dr. Hernández (PTC, 61 años)</option>
+                <option value="PTC_54">Dra. Gómez (PTC, 54 años)</option>
+                <option value="ASIG_31">Mtro. Ortega (Asignatura, 31 años)</option>
+              </select>
+            </div>
+            <div>
+              <label for="inp2027Rango" class="block text-[10px] font-bold text-slate-500 uppercase">RANGO_DOCENTE_LV</label>
+              <select id="inp2027Rango" onchange="render2027Table()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-1.5 font-mono font-semibold text-slate-800">
+                <option value="07:00-13:00">07:00-13:00 (Matutino)</option>
+                <option value="09:00-15:00">09:00-15:00 (Intermedio)</option>
+                <option value="15:00-21:00">15:00-21:00 (Vespertino)</option>
+              </select>
+            </div>
+            <div>
+              <label for="inp2027Cupo" class="block text-[10px] font-bold text-slate-500 uppercase">Cupo / Espacio</label>
+              <select id="inp2027Cupo" onchange="render2027Table()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-1.5 font-semibold text-slate-800">
+                <option value="44_Teorica">44 alum • Aula_Teorica</option>
+                <option value="32_Teorica">32 alum • Aula_Teorica</option>
+                <option value="34_Computo">34 alum • Sala_Computo</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Vista Previa de la Hoja de Cálculo 2027A -->
+          <div class="overflow-x-auto border border-slate-200 rounded-xl">
+            <table class="w-full text-[11px] text-left border-collapse">
+              <thead>
+                <tr class="bg-emerald-900 text-white font-mono">
+                  <th class="p-2 border border-emerald-800">CLAVE / MATERIA</th>
+                  <th class="p-2 border border-emerald-800">DOCENTE (TIPO)</th>
+                  <th class="p-2 border border-emerald-800 text-center">RANGO_LV</th>
+                  <th class="p-2 border border-emerald-800 text-center bg-amber-500 text-slate-950 font-bold">L</th>
+                  <th class="p-2 border border-emerald-800 text-center bg-amber-500 text-slate-950 font-bold">Ma</th>
+                  <th class="p-2 border border-emerald-800 text-center bg-amber-500 text-slate-950 font-bold">Mi</th>
+                  <th class="p-2 border border-emerald-800 text-center bg-amber-500 text-slate-950 font-bold">J</th>
+                  <th class="p-2 border border-emerald-800 text-center bg-amber-500 text-slate-950 font-bold">V</th>
+                  <th class="p-2 border border-emerald-800 text-center bg-emerald-700">Asignación</th>
+                </tr>
+              </thead>
+              <tbody id="table2027Body" class="divide-y divide-slate-200 font-mono"></tbody>
+            </table>
+          </div>
+
+          <!-- Consola del Daemon Watchdog y Hash SHA-256 -->
+          <div id="daemonConsole2027" class="bg-slate-900 text-emerald-400 p-4 rounded-xl font-mono text-xs space-y-1.5">
+            <div class="text-slate-400">[Watchdog Daemon] Esperando cambios en Plantilla_Entrada_Planta_2027A.xlsx...</div>
+            <div>&gt; Columnas L, Ma, Mi, J, V, S detectadas EN BLANCO (Regla de Oro activa).</div>
+            <div class="text-uaemex-gold">&gt; Haz clic en "Guardar (Ctrl+G) y Optimizar" para ejecutar Fase 1 y Fase 2.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL DE FICHA TÉCNICA RESUMIDA -->
+  <div id="modalResumen" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div>
+          <span class="text-xs font-bold uppercase text-uaemex-green">Facultad de Economía • UAEMex</span>
+          <h3 class="text-lg font-extrabold text-slate-900">Ficha Técnica del Algoritmo Genético Memético Vectorizado</h3>
+        </div>
+        <button onclick="closeModalResumen()" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold">✕</button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-700">
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+          <div class="font-bold text-slate-900">Parámetros Evolutivos</div>
+          <div>• Población (<code class="font-mono">pop_size</code>): <strong>100 individuos</strong></div>
+          <div>• Generaciones (<code class="font-mono">n_generations</code>): <strong>150</strong></div>
+          <div>• Tasa de Cruza (<code class="font-mono">crossover_rate</code>): <strong>0.88</strong></div>
+          <div>• Tasa de Mutación (<code class="font-mono">mutation_rate</code>): <strong>0.40</strong></div>
+          <div>• Elitismo (<code class="font-mono">elite_count</code>): <strong>6 individuos</strong></div>
+          <div>• Torneo (<code class="font-mono">tournament_k</code>): <strong>k = 3</strong></div>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+          <div class="font-bold text-slate-900">Métricas Clave Auditadas (2026A)</div>
+          <div>• Tiempo total de ejecución: <strong>18.71 s</strong></div>
+          <div>• Sobrecupos eliminados: <strong>41 → 0 (-100%)</strong></div>
+          <div>• Ahorro caminata docente: <strong>-18.3% (1,720 m)</strong></div>
+          <div>• Ahorro caminata alumnos: <strong>-12.4% (13,100 m)</strong></div>
+          <div>• PTC en Edificios B/C: <strong>82.5% (2026A) / 91.9% (2027A)</strong></div>
+          <div>• Estabilidad semanal: <strong>99.6% cursos fijos</strong></div>
+        </div>
+      </div>
+      <div class="flex justify-end pt-2">
+        <button onclick="closeModalResumen()" class="px-4 py-2 rounded-xl text-xs font-bold bg-uaemex-green text-white hover:bg-uaemex-dark transition">
+          Cerrar Ficha
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 mt-8 py-4">
+    <div class="max-w-7xl mx-auto px-4 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+      <span>Universidad Autónoma del Estado de México (UAEMex) — Facultad de Economía</span>
+      <span class="font-mono">Modelo UCTP • Algoritmo Genético Memético Vectorizado en NumPy (2026A / 2027A)</span>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- LÓGICA INTERACTIVA EN JAVASCRIPT                                      -->
+  <!-- ===================================================================== -->
+  <script>
+    // -----------------------------------------------------------------------
+    // 1. CATÁLOGO REAL DE LAS 34 AULAS Y MATRIZ DE DISTANCIAS (NOTEBOOK)
+    // -----------------------------------------------------------------------
+    const AULAS_CATALOG = [
+      // Edificio B (11 Aulas Teóricas)
+      { id: 'A1', short: '1', edificio: 'B', piso: 1, cap: 48, tipo: 'Aula_Teorica' },
+      { id: 'A2', short: '2', edificio: 'B', piso: 1, cap: 48, tipo: 'Aula_Teorica' },
+      { id: 'A3', short: '3', edificio: 'B', piso: 1, cap: 48, tipo: 'Aula_Teorica' },
+      { id: 'A4', short: '4', edificio: 'B', piso: 1, cap: 48, tipo: 'Aula_Teorica' },
+      { id: 'A5', short: '5', edificio: 'B', piso: 2, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'A6', short: '6', edificio: 'B', piso: 2, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'A7', short: '7', edificio: 'B', piso: 2, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'A8', short: '8', edificio: 'B', piso: 2, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'A9', short: '9', edificio: 'B', piso: 3, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'A10', short: '10', edificio: 'B', piso: 3, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'A11', short: '11', edificio: 'B', piso: 3, cap: 36, tipo: 'Aula_Teorica' },
+      // Edificio C (7 Aulas Teóricas)
+      { id: 'A12', short: '12', edificio: 'C', piso: 1, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'A13', short: '13', edificio: 'C', piso: 1, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'A14', short: '14', edificio: 'C', piso: 2, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'A15', short: '15', edificio: 'C', piso: 2, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'A16', short: '16', edificio: 'C', piso: 2, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'AULA_LK', short: 'LK', edificio: 'C', piso: 2, cap: 35, tipo: 'Aula_Teorica' },
+      { id: 'AULA_LC', short: 'LC', edificio: 'C', piso: 2, cap: 35, tipo: 'Aula_Teorica' },
+      // Edificio D (8 Aulas Teóricas)
+      { id: 'A17', short: '17', edificio: 'D', piso: 1, cap: 48, tipo: 'Aula_Teorica' },
+      { id: 'A18', short: '18', edificio: 'D', piso: 2, cap: 22, tipo: 'Aula_Teorica' },
+      { id: 'A19', short: '19', edificio: 'D', piso: 2, cap: 22, tipo: 'Aula_Teorica' },
+      { id: 'A20', short: '20', edificio: 'D', piso: 2, cap: 22, tipo: 'Aula_Teorica' },
+      { id: 'A21', short: '21', edificio: 'D', piso: 3, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'A22', short: '22', edificio: 'D', piso: 3, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'A23', short: '23', edificio: 'D', piso: 4, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'A24', short: '24', edificio: 'D', piso: 4, cap: 36, tipo: 'Aula_Teorica' },
+      // 8 Salas de Cómputo (Edificios C, D, E)
+      { id: 'SC_C', short: 'SC_C', edificio: 'C', piso: 2, cap: 40, tipo: 'Sala_Computo' },
+      { id: 'SC_D', short: 'SC_D', edificio: 'C', piso: 3, cap: 40, tipo: 'Sala_Computo' },
+      { id: 'SC_E', short: 'SC_E', edificio: 'D', piso: 2, cap: 25, tipo: 'Sala_Computo' },
+      { id: 'SC_F', short: 'SC_F', edificio: 'D', piso: 3, cap: 40, tipo: 'Sala_Computo' },
+      { id: 'SC_G', short: 'SC_G', edificio: 'D', piso: 4, cap: 45, tipo: 'Sala_Computo' },
+      { id: 'SC_H', short: 'SC_H', edificio: 'E', piso: 1, cap: 35, tipo: 'Sala_Computo' },
+      { id: 'SC_I', short: 'SC_I', edificio: 'E', piso: 2, cap: 35, tipo: 'Sala_Computo' },
+      { id: 'SC_J', short: 'SC_J', edificio: 'E', piso: 3, cap: 25, tipo: 'Sala_Computo' }
+    ];
+
+    const DIST_EDIF = {
+      A: { A: 0, B: 30, C: 55, D: 70, E: 35 },
+      B: { A: 30, B: 0, C: 35, D: 65, E: 50 },
+      C: { A: 55, B: 35, C: 0, D: 35, E: 40 },
+      D: { A: 70, B: 65, C: 35, D: 0, E: 40 },
+      E: { A: 35, B: 50, C: 40, D: 40, E: 0 }
+    };
+
+    const SVG_EDIF_COORDS = {
+      A: { x: 85, y: 115 },
+      B: { x: 220, y: 75 },
+      C: { x: 360, y: 120 },
+      D: { x: 547, y: 70 },
+      E: { x: 517, y: 177 }
+    };
+
+    // -----------------------------------------------------------------------
+    // 2. NAVEGACIÓN ENTRE LOS 8 PASOS Y RECORRIDO GUIADO
+    // -----------------------------------------------------------------------
+    let currentStep = 1;
+    let guidedTourTimer = null;
+
+    const STEP_META = {
+      1: {
+        badge: 'PASO 1 DE 8 • PROBLEMA UCTP Y CAMPUS FÍSICO',
+        tag: 'NP-Hard • Ω = 34⁶⁸¹ ≈ 10¹⁰⁴³',
+        title: '1. El Problema UCTP en la Facultad de Economía y Distancias Peatonales Efectivas',
+        subtitle: 'Explora las 372 Unidades de Aprendizaje, las 34 aulas distribuidas en 4 edificios sobre el Cerro de Coatepec y simula el cálculo de distancia peatonal efectiva con penalización biomecánica vertical de 15 m por piso.'
+      },
+      2: {
+        badge: 'PASO 2 DE 8 • CODIFICACIÓN E INVARIANTE DE FACTIBILIDAD',
+        tag: 'H₂(c) ≡ 0 • H₃(c) ≡ 0',
+        title: '2. Representación Cromosómica e Invariante de Dominios Admisibles (Aᵢ)',
+        subtitle: 'En lugar de permitir asignaciones inválidas y penalizarlas después, cada gen cᵢ extrae sus valores exclusivamente del subconjunto de aulas compatibles en tipo y capacidad.'
+      },
+      3: {
+        badge: 'PASO 3 DE 8 • VECTORIZACIÓN MATRICIAL 3D EN NUMPY',
+        tag: 'Broadcasting (P, N, N) • < 20 ms',
+        title: '3. Evaluación Simultánea en Paralelo con Tensores 3D en NumPy',
+        subtitle: 'Reemplaza 3.47 mil millones de iteraciones en bucles de Python por operaciones matriciales SIMD en C/Fortran, acelerando la evaluación más de 60 veces.'
+      },
+      4: {
+        badge: 'PASO 4 DE 8 • OPERADOR DE CRUZA HÍBRIDA ADAPTATIVA',
+        tag: '60% Course-Uniform • 40% Day-Block',
+        title: '4. Operador de Cruza Híbrida: Course-Uniform & Day-Block Crossover',
+        subtitle: 'Combina progenitores preservando la estabilidad semanal de aula por materia (S₇ = 0) y heredando días enteros libres de colisiones (H₁ = 0).'
+      },
+      5: {
+        badge: 'PASO 5 DE 8 • BÚSQUEDA LOCAL MEMÉTICA Y AUGMENTING SWAPS',
+        tag: 'Saturación 100% (26/26 Aulas)',
+        title: '5. Búsqueda Local Memética con Cadenas de Intercambio (Augmenting Swaps)',
+        subtitle: 'En Lunes y Miércoles de 11:00 a 13:00 hrs las 26 aulas teóricas están al 100% de ocupación. Los Augmenting Swaps destraban sobrecupos mediante intercambios en cadena.'
+      },
+      6: {
+        badge: 'PASO 6 DE 8 • FUNCIÓN OBJETIVO Y CALIBRACIÓN AHP DE SAATY',
+        tag: 'CR = 0.053 < 0.10 • γ = 0.001',
+        title: '6. Función de Aptitud (Fitness), Pesos AHP de Saaty y Tasas Marginales',
+        subtitle: 'Jerarquización multicriterio validada matemáticamente y escalada con el factor γ = 0.001 para amplificar el gradiente selectivo en el torneo.'
+      },
+      7: {
+        badge: 'PASO 7 DE 8 • CONVERGENCIA EVOLUTIVA Y AUDITORÍA 2026A',
+        tag: '150 Generaciones • 18.71 s',
+        title: '7. Resultados Reales sobre la Planta 2026A: Asignación Manual vs. AG Memético',
+        subtitle: 'Reproduce las 150 generaciones reales del modelo y compara la eliminación de los 41 sobrecupos, el ahorro de caminata (-18.3%) y la prioridad PTC.'
+      },
+      8: {
+        badge: 'PASO 8 DE 8 • AUTOMATIZACIÓN INTEGRAL 2027A (REGLA DE ORO)',
+        tag: 'Fase 1 (Horarios) + Fase 2 (Aulas)',
+        title: '8. Automatización en 1 Clic hacia 2027A: Captura sin Horarios y Daemon Watchdog',
+        subtitle: 'Simula cómo las jefaturas de carrera capturan únicamente Docente y Rango Horario dejando L, Ma, Mi, J, V, S vacías para que el sistema arme horarios y aulas en 25 segundos.'
+      }
+    };
+
+    function goToStep(stepNum) {
+      currentStep = stepNum;
+      for (let i = 1; i <= 8; i++) {
+        const view = document.getElementById('stepView' + i);
+        const navBtn = document.getElementById('navStep' + i);
+        if (view) {
+          if (i === stepNum) view.classList.remove('hidden');
+          else view.classList.add('hidden');
+        }
+        if (navBtn) {
+          if (i === stepNum) navBtn.classList.add('step-btn-active');
+          else navBtn.classList.remove('step-btn-active');
+        }
+      }
+      const meta = STEP_META[stepNum];
+      document.getElementById('stepBadge').textContent = meta.badge;
+      document.getElementById('stepComplexityTag').textContent = meta.tag;
+      document.getElementById('stepTitle').textContent = meta.title;
+      document.getElementById('stepSubtitle').textContent = meta.subtitle;
+      document.getElementById('progressBar').style.width = ((stepNum / 8) * 100) + '%';
+
+      document.getElementById('btnPrevStep').disabled = (stepNum === 1);
+      document.getElementById('btnNextStep').textContent = (stepNum === 8) ? 'Volver al Paso 1 ↺' : 'Siguiente Paso →';
+
+      if (stepNum === 7) {
+        setTimeout(() => {
+          initOrUpdateCharts();
+        }, 50);
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) goToStep(currentStep - 1);
+    }
+
+    function nextStep() {
+      if (currentStep < 8) goToStep(currentStep + 1);
+      else goToStep(1);
+    }
+
+    function toggleGuidedTour() {
+      const icon = document.getElementById('tourIcon');
+      const label = document.getElementById('tourLabel');
+      if (guidedTourTimer) {
+        clearInterval(guidedTourTimer);
+        guidedTourTimer = null;
+        icon.textContent = '▶';
+        label.textContent = 'Recorrido Guiado';
+      } else {
+        icon.textContent = '⏸';
+        label.textContent = 'Pausar Tour';
+        guidedTourTimer = setInterval(() => {
+          nextStep();
+        }, 5500);
+      }
+    }
+
+    function openModalResumen() {
+      const m = document.getElementById('modalResumen');
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+
+    function closeModalResumen() {
+      const m = document.getElementById('modalResumen');
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+
+    // -----------------------------------------------------------------------
+    // 3. PASO 1: SIMULADOR DE DISTANCIAS PEATONALES EFECTIVAS
+    // -----------------------------------------------------------------------
+    function initDistanceSelects() {
+      const selOrig = document.getElementById('selectAulaOrigen');
+      const selDest = document.getElementById('selectAulaDestino');
+      selOrig.innerHTML = '';
+      selDest.innerHTML = '';
+
+      AULAS_CATALOG.forEach((a) => {
+        const label = `${a.id} — Edif ${a.edificio} (Piso ${a.piso}, Cap ${a.cap}, ${a.tipo === 'Aula_Teorica' ? 'Teórica' : 'Cómputo'})`;
+        const opt1 = document.createElement('option');
+        opt1.value = a.id;
+        opt1.textContent = label;
+        const opt2 = document.createElement('option');
+        opt2.value = a.id;
+        opt2.textContent = label;
+        selOrig.appendChild(opt1);
+        selDest.appendChild(opt2);
+      });
+
+      selOrig.value = 'A1';
+      selDest.value = 'SC_G';
+      updateDistanceSim();
+    }
+
+    function setDistancePreset(id1, id2) {
+      document.getElementById('selectAulaOrigen').value = id1;
+      document.getElementById('selectAulaDestino').value = id2;
+      updateDistanceSim();
+    }
+
+    function updateDistanceSim() {
+      const id1 = document.getElementById('selectAulaOrigen').value;
+      const id2 = document.getElementById('selectAulaDestino').value;
+      const a1 = AULAS_CATALOG.find(x => x.id === id1) || AULAS_CATALOG[0];
+      const a2 = AULAS_CATALOG.find(x => x.id === id2) || AULAS_CATALOG[30];
+
+      const dHoriz = DIST_EDIF[a1.edificio][a2.edificio];
+      const diffPiso = Math.abs(a1.piso - a2.piso);
+      const dVert = diffPiso * 15.0;
+      const dTotal = dHoriz + dVert;
+      const estSeconds = Math.round(dHoriz / 1.2 + diffPiso * 32);
+
+      document.getElementById('distHorizVal').textContent = dHoriz + ' m';
+      document.getElementById('distHorizSub').textContent = `Edif ${a1.edificio} ↔ Edif ${a2.edificio}`;
+      document.getElementById('distVertVal').textContent = dVert + ' m';
+      document.getElementById('distVertSub').textContent = `|Piso ${a1.piso} - Piso ${a2.piso}| × 15m`;
+      document.getElementById('distTotalVal').textContent = dTotal + ' m';
+      document.getElementById('distTimeSub').textContent = `~${estSeconds} seg en traslado`;
+      document.getElementById('svgRouteLabel').textContent = `${a1.id} (Edif ${a1.edificio} P${a1.piso}) → ${a2.id} (Edif ${a2.edificio} P${a2.piso}) = ${dTotal} m`;
+
+      // Actualizar línea SVG y resaltado de edificios
+      const c1 = SVG_EDIF_COORDS[a1.edificio];
+      const c2 = SVG_EDIF_COORDS[a2.edificio];
+      const line = document.getElementById('svgActiveLine');
+      line.setAttribute('x1', c1.x);
+      line.setAttribute('y1', c1.y);
+      line.setAttribute('x2', c2.x);
+      line.setAttribute('y2', c2.y);
+
+      ['A', 'B', 'C', 'D', 'E'].forEach(ed => {
+        const rect = document.getElementById('nodeEdif' + ed);
+        if (ed === a1.edificio || ed === a2.edificio) {
+          rect.setAttribute('stroke', '#c59b27');
+          rect.setAttribute('stroke-width', '3.5');
+          rect.setAttribute('fill', '#1b4d3e');
+        } else {
+          rect.setAttribute('stroke', '#64748b');
+          rect.setAttribute('stroke-width', '2');
+          rect.setAttribute('fill', '#1e293b');
+        }
+      });
+    }
+
+    // -----------------------------------------------------------------------
+    // 4. PASO 2: SIMULADOR DE DOMINIO ADMISIBLE A_i
+    // -----------------------------------------------------------------------
+    let currentDomainTipo = 'Aula_Teorica';
+
+    function setDomainTipo(tipo) {
+      currentDomainTipo = tipo;
+      const btnT = document.getElementById('btnTipoTeorica');
+      const btnC = document.getElementById('btnTipoComputo');
+      if (tipo === 'Aula_Teorica') {
+        btnT.className = 'px-3 py-2 rounded-xl text-xs font-bold bg-uaemex-green text-white border border-uaemex-green transition';
+        btnC.className = 'px-3 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition';
+      } else {
+        btnC.className = 'px-3 py-2 rounded-xl text-xs font-bold bg-uaemex-green text-white border border-uaemex-green transition';
+        btnT.className = 'px-3 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition';
+      }
+      updateDomainSim();
+    }
+
+    function setDomainPreset(presetKey) {
+      const presets = {
+        micro: { inscritos: 42, tipo: 'Aula_Teorica', title: 'Microeconomía I (ACT) — 42 estudiantes • Requiere Aula_Teorica' },
+        econometria: { inscritos: 38, tipo: 'Sala_Computo', title: 'Econometría I (ECO) — 38 estudiantes • Requiere Sala_Computo' },
+        algebra: { inscritos: 20, tipo: 'Aula_Teorica', title: 'Álgebra Superior (NIB) — 20 estudiantes • Requiere Aula_Teorica' }
+      };
+      const p = presets[presetKey] || presets.micro;
+      document.getElementById('sliderInscritos').value = p.inscritos;
+      document.getElementById('domainPresetTitle').textContent = 'Caso activo: ' + p.title;
+      setDomainTipo(p.tipo);
+    }
+
+    function updateDomainSim() {
+      const inscritos = parseInt(document.getElementById('sliderInscritos').value, 10);
+      document.getElementById('labelInscritosVal').textContent = inscritos + ' alumnos';
+
+      const grid = document.getElementById('domainRoomsGrid');
+      grid.innerHTML = '';
+      let validCount = 0;
+      const validIds = [];
+
+      AULAS_CATALOG.forEach(a => {
+        const sameTipo = (a.tipo === currentDomainTipo);
+        const enoughCap = (a.cap >= inscritos);
+        const isAdmissible = sameTipo && enoughCap;
+        if (isAdmissible) {
+          validCount++;
+          validIds.push(a.id);
+        }
+
+        let cardClass = 'p-2 rounded-xl border text-center room-pill ';
+        let statusTag = '';
+        if (isAdmissible) {
+          cardClass += 'bg-emerald-600 text-white border-emerald-700 shadow-sm';
+          statusTag = '✓ Admisible';
+        } else if (!sameTipo) {
+          cardClass += 'bg-slate-100 text-slate-400 border-slate-200 opacity-60';
+          statusTag = '✗ Tipo H₃';
+        } else {
+          cardClass += 'bg-rose-50 text-rose-700 border-rose-200';
+          statusTag = '✗ Cupo H₂';
+        }
+
+        const div = document.createElement('div');
+        div.className = cardClass;
+        div.innerHTML = `
+          <div class="font-mono font-extrabold text-xs">${a.id}</div>
+          <div class="text-[10px] opacity-90">Edif ${a.edificio} P${a.piso} • Cap ${a.cap}</div>
+          <div class="text-[9px] font-bold mt-0.5">${statusTag}</div>
+        `;
+        grid.appendChild(div);
+      });
+
+      document.getElementById('domainCountBadge').textContent = `${validCount} / 34 aulas admisibles`;
+      document.getElementById('domainFormulaText').textContent = `Aᵢ = {${validIds.slice(0, 6).join(', ')}${validIds.length > 6 ? ', ...' : ''}} (${validCount} opciones)`;
+    }
+
+    // -----------------------------------------------------------------------
+    // 5. PASO 3: SIMULADOR DEL TENSOR 3D EN NUMPY (SAMEROOM & OVERLAP)
+    // -----------------------------------------------------------------------
+    const MINI_TENSOR_SESSIONS = [
+      { idx: 0, code: 'S₀: Micro I', dia: 'Lun', hora: '11:00-13:00', room: 'A1' },
+      { idx: 1, code: 'S₁: Macro I', dia: 'Lun', hora: '11:00-13:00', room: 'A2' },
+      { idx: 2, code: 'S₂: Finanzas', dia: 'Lun', hora: '11:00-13:00', room: 'A3' },
+      { idx: 3, code: 'S₃: Estadística', dia: 'Lun', hora: '09:00-11:00', room: 'A1' },
+      { idx: 4, code: 'S₄: Comercio', dia: 'Mié', hora: '11:00-13:00', room: 'A1' }
+    ];
+
+    function initTensorSim() {
+      renderTensorControls();
+      updateTensorMatrices();
+    }
+
+    function renderTensorControls() {
+      const container = document.getElementById('tensorSessionsList');
+      container.innerHTML = '';
+      const roomChoices = ['A1', 'A2', 'A3', 'A4'];
+
+      MINI_TENSOR_SESSIONS.forEach((s, i) => {
+        const div = document.createElement('div');
+        div.className = 'p-2.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1';
+        let opts = '';
+        roomChoices.forEach(r => {
+          opts += `<option value="${r}" ${s.room === r ? 'selected' : ''}>Aula ${r}</option>`;
+        });
+        div.innerHTML = `
+          <div class="text-xs font-bold text-slate-800">${s.code}</div>
+          <div class="text-[10px] font-mono text-slate-500">${s.dia} ${s.hora}</div>
+          <select onchange="changeTensorRoom(${i}, this.value)" class="w-full mt-1 rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs font-mono font-bold text-uaemex-green">
+            ${opts}
+          </select>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function changeTensorRoom(sessionIdx, newRoom) {
+      MINI_TENSOR_SESSIONS[sessionIdx].room = newRoom;
+      updateTensorMatrices();
+    }
+
+    function provokeTensorCollision() {
+      MINI_TENSOR_SESSIONS[0].room = 'A1';
+      MINI_TENSOR_SESSIONS[1].room = 'A1';
+      MINI_TENSOR_SESSIONS[2].room = 'A1';
+      renderTensorControls();
+      updateTensorMatrices();
+    }
+
+    function resolveTensorCollisions() {
+      MINI_TENSOR_SESSIONS[0].room = 'A1';
+      MINI_TENSOR_SESSIONS[1].room = 'A2';
+      MINI_TENSOR_SESSIONS[2].room = 'A3';
+      MINI_TENSOR_SESSIONS[3].room = 'A1';
+      MINI_TENSOR_SESSIONS[4].room = 'A1';
+      renderTensorControls();
+      updateTensorMatrices();
+    }
+
+    function updateTensorMatrices() {
+      const sameRoomEl = document.getElementById('matrixSameRoom');
+      const overlapEl = document.getElementById('matrixOverlap');
+      const collisionEl = document.getElementById('matrixCollision');
+      sameRoomEl.innerHTML = '';
+      overlapEl.innerHTML = '';
+      collisionEl.innerHTML = '';
+
+      let h1Count = 0;
+
+      for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 5; j++) {
+          const s_i = MINI_TENSOR_SESSIONS[i];
+          const s_j = MINI_TENSOR_SESSIONS[j];
+
+          const isSameRoom = (s_i.room === s_j.room);
+          const isOverlap = (i !== j) && (s_i.dia === s_j.dia) && (s_i.hora === s_j.hora);
+          const isCollision = isSameRoom && isOverlap;
+          if (isCollision && i < j) h1Count++;
+
+          const c1 = document.createElement('div');
+          c1.className = `p-1.5 rounded ${isSameRoom ? 'bg-amber-200 text-amber-950 font-bold' : 'bg-white text-slate-400 border border-slate-100'}`;
+          c1.textContent = isSameRoom ? '1' : '0';
+          sameRoomEl.appendChild(c1);
+
+          const c2 = document.createElement('div');
+          c2.className = `p-1.5 rounded ${isOverlap ? 'bg-sky-200 text-sky-950 font-bold' : 'bg-white text-slate-400 border border-slate-100'}`;
+          c2.textContent = isOverlap ? '1' : '0';
+          overlapEl.appendChild(c2);
+
+          const c3 = document.createElement('div');
+          c3.className = `p-1.5 rounded ${isCollision ? 'bg-rose-600 text-white font-extrabold pulse-ring' : 'bg-slate-800 text-slate-500'}`;
+          c3.textContent = isCollision ? '1' : '0';
+          collisionEl.appendChild(c3);
+        }
+      }
+
+      const badge = document.getElementById('tensorH1Badge');
+      if (h1Count === 0) {
+        badge.className = 'px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-600 text-white font-mono';
+        badge.textContent = 'H₁ = 0 colisiones (Factible)';
+      } else {
+        badge.className = 'px-3 py-1 rounded-full text-xs font-extrabold bg-rose-600 text-white font-mono pulse-ring';
+        badge.textContent = `H₁ = ${h1Count} colisiones detectadas`;
+      }
+    }
+
+    // -----------------------------------------------------------------------
+    // 6. PASO 4: SIMULADOR DE CRUZA HÍBRIDA ADAPTATIVA
+    // -----------------------------------------------------------------------
+    let currentCrossoverMode = 'course';
+
+    const CROSSOVER_GENES = [
+      { course: 'Cálculo Diferencial (ACT)', day: 'Lunes 09-11', p1: 'A1 (Edif B)', p2: 'A12 (Edif C)' },
+      { course: 'Cálculo Diferencial (ACT)', day: 'Miércoles 09-11', p1: 'A1 (Edif B)', p2: 'A12 (Edif C)' },
+      { course: 'Cálculo Diferencial (ACT)', day: 'Viernes 09-11', p1: 'A1 (Edif B)', p2: 'A12 (Edif C)' },
+      { course: 'Macroeconomía I (ECO)', day: 'Lunes 09-11', p1: 'A6 (Edif B)', p2: 'A17 (Edif D)' },
+      { course: 'Macroeconomía I (ECO)', day: 'Miércoles 09-11', p1: 'A6 (Edif B)', p2: 'A17 (Edif D)' },
+      { course: 'Economía Int. (NIB)', day: 'Martes 11-13', p1: 'A14 (Edif C)', p2: 'A3 (Edif B)' },
+      { course: 'Economía Int. (NIB)', day: 'Jueves 11-13', p1: 'A14 (Edif C)', p2: 'A3 (Edif B)' }
+    ];
+
+    function setCrossoverMode(mode, randVal = null) {
+      currentCrossoverMode = mode;
+      const bCourse = document.getElementById('btnCrossCourse');
+      const bDay = document.getElementById('btnCrossDay');
+      const bOne = document.getElementById('btnCrossOnePoint');
+
+      bCourse.className = 'p-2.5 rounded-xl border text-left transition ' + (mode === 'course' ? 'bg-uaemex-green text-white border-uaemex-green' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50');
+      bDay.className = 'p-2.5 rounded-xl border text-left transition ' + (mode === 'day' ? 'bg-sky-700 text-white border-sky-700' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50');
+      bOne.className = 'p-2.5 rounded-xl border text-left transition ' + (mode === 'onepoint' ? 'bg-rose-700 text-white border-rose-700' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50');
+
+      const banner = document.getElementById('crossoverStatusBanner');
+      const rPrefix = randVal !== null ? `[Sorteo r = ${randVal.toFixed(2)}] ` : '';
+
+      if (mode === 'course') {
+        banner.className = 'px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 font-medium flex flex-wrap items-center justify-between gap-2';
+        banner.innerHTML = `<span>${rPrefix}<strong>Course-Uniform Crossover (r &lt; 0.60):</strong> Cada materia hereda todas sus sesiones semanales del mismo padre.</span><span class="font-mono font-bold">S₇ = 0 cambios de salón | H₁ = 0</span>`;
+      } else if (mode === 'day') {
+        banner.className = 'px-3.5 py-2 rounded-xl bg-sky-50 border border-sky-200 text-xs text-sky-900 font-medium flex flex-wrap items-center justify-between gap-2';
+        banner.innerHTML = `<span>${rPrefix}<strong>Day-Block Crossover (r ≥ 0.60):</strong> Se intercambian días completos libres de colisiones entre padres.</span><span class="font-mono font-bold">H₁ = 0 colisiones garantizado en cada día</span>`;
+      } else {
+        banner.className = 'px-3.5 py-2 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-900 font-medium flex flex-wrap items-center justify-between gap-2';
+        banner.innerHTML = `<span><strong>Cruce Clásico de 1 Punto (Corte en gen 2):</strong> Parte Cálculo Diferencial a mitad de semana (Lun en A1 vs Mié/Vie en A12).</span><span class="font-mono font-bold">¡Violación S₇ &gt; 0! (Salón inconsistente)</span>`;
+      }
+
+      renderCrossoverTable();
+    }
+
+    function runRandomCrossover() {
+      const r = Math.random();
+      if (r < 0.60) {
+        setCrossoverMode('course', r);
+      } else {
+        setCrossoverMode('day', r);
+      }
+    }
+
+    function renderCrossoverTable() {
+      const container = document.getElementById('crossoverTablesContainer');
+      let rowsHtml = '';
+
+      CROSSOVER_GENES.forEach((g, idx) => {
+        let fromP1 = true;
+        if (currentCrossoverMode === 'course') {
+          fromP1 = (g.course !== 'Macroeconomía I (ECO)');
+        } else if (currentCrossoverMode === 'day') {
+          fromP1 = g.day.startsWith('Lunes') || g.day.startsWith('Miércoles') || g.day.startsWith('Viernes');
+        } else {
+          fromP1 = (idx < 2);
+        }
+
+        const childRoom = fromP1 ? g.p1 : g.p2;
+        const sourceBadge = fromP1
+          ? '<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono text-[10px] font-bold">Padre 1</span>'
+          : '<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-mono text-[10px] font-bold">Padre 2</span>';
+
+        const isBrokenCourse = (currentCrossoverMode === 'onepoint' && g.course === 'Cálculo Diferencial (ACT)' && idx === 2);
+
+        rowsHtml += `
+          <tr class="${isBrokenCourse ? 'bg-rose-50' : 'bg-white'} border-b border-slate-100">
+            <td class="p-2 font-semibold text-slate-800">${g.course}</td>
+            <td class="p-2 font-mono text-slate-600">${g.day}</td>
+            <td class="p-2 font-mono text-center text-emerald-800 bg-emerald-50/40">${g.p1}</td>
+            <td class="p-2 font-mono text-center text-amber-800 bg-amber-50/40">${g.p2}</td>
+            <td class="p-2 text-center">${sourceBadge}</td>
+            <td class="p-2 font-mono font-bold text-center ${isBrokenCourse ? 'text-rose-700' : 'text-slate-900'}">
+              ${childRoom} ${isBrokenCourse ? '⚠️ (S₇+1)' : '✓'}
+            </td>
+          </tr>
+        `;
+      });
+
+      container.innerHTML = `
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-xs text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700">
+                <th class="p-2 border-b border-slate-200">Unidad de Aprendizaje</th>
+                <th class="p-2 border-b border-slate-200">Día y Bloque</th>
+                <th class="p-2 border-b border-slate-200 text-center">Gen Padre 1</th>
+                <th class="p-2 border-b border-slate-200 text-center">Gen Padre 2</th>
+                <th class="p-2 border-b border-slate-200 text-center">Herencia</th>
+                <th class="p-2 border-b border-slate-200 text-center">Gen Hijo 1</th>
+              </tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    // -----------------------------------------------------------------------
+    // 7. PASO 5: SIMULADOR DE AUGMENTING SWAPS Y SUB-OPERADOR PTC
+    // -----------------------------------------------------------------------
+    let currentSwapPhase = 0;
+    let ptcSwapResolved = false;
+
+    function setSwapPhase(phase) {
+      currentSwapPhase = phase;
+      for (let i = 0; i <= 2; i++) {
+        const btn = document.getElementById('btnSwapPhase' + i);
+        if (i === phase) {
+          btn.className = 'p-2.5 rounded-xl border text-xs font-bold transition ' + (phase === 0 ? 'bg-rose-600 text-white border-rose-600' : 'bg-uaemex-green text-white border-uaemex-green');
+        } else {
+          btn.className = 'p-2.5 rounded-xl border text-xs font-bold transition bg-white text-slate-700 border-slate-200 hover:bg-slate-50';
+        }
+      }
+
+      const box = document.getElementById('swapStageBox');
+      if (phase === 0) {
+        box.innerHTML = `
+          <div class="flex items-center justify-between text-xs text-rose-300 font-mono">
+            <span>FRANJA PICO: MIÉRCOLES 11:00 - 13:00 HRS (26/26 Aulas Ocupadas)</span>
+            <span class="px-2 py-0.5 rounded bg-rose-600 text-white font-bold">VIOLACIÓN H₂ = 1</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div class="p-3.5 rounded-xl bg-rose-950/80 border-2 border-rose-500 space-y-1">
+              <div class="font-bold text-rose-300">Sesión A (Con Sobrecupo)</div>
+              <div class="text-white font-semibold">Macroeconomía (45 alumnos)</div>
+              <div class="font-mono text-rose-200">Ocupa: Aula A6 (Cap 36)</div>
+              <div class="text-[11px] text-rose-300">❌ Déficit de 9 butacas (requiere ≥ 48).</div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-800 border border-slate-700 space-y-1">
+              <div class="font-bold text-amber-300">Aula A18 (Capacidad 22)</div>
+              <div class="text-white font-semibold">Único hueco hallado en sub-bloque</div>
+              <div class="font-mono text-slate-300">Estado: Libre (Cap 22)</div>
+              <div class="text-[11px] text-amber-200">⚠️ Insuficiente para Sesión A (45 &gt; 22). Mutación simple bloqueada.</div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-800 border border-slate-700 space-y-1">
+              <div class="font-bold text-sky-300">Sesión B (Candidata en A1)</div>
+              <div class="text-white font-semibold">Álgebra Superior NIB (20 alumnos)</div>
+              <div class="font-mono text-sky-200">Ocupa: Aula A1 (Cap 48)</div>
+              <div class="text-[11px] text-slate-300">Subutiliza 28 butacas en un salón grande.</div>
+            </div>
+          </div>
+        `;
+      } else if (phase === 1) {
+        box.innerHTML = `
+          <div class="flex items-center justify-between text-xs text-amber-300 font-mono">
+            <span>PASO 1: EXPLORACIÓN DE GRAFO BIPARTITO (CAMINO AUMENTANTE)</span>
+            <span class="px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold">COMPATIBILIDAD DETECTADA</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div class="p-3.5 rounded-xl bg-slate-800 border-2 border-amber-400 space-y-1">
+              <div class="font-bold text-amber-300">1. Demanda de Sesión A</div>
+              <div class="text-white">Busca un salón con <code class="font-mono">cap ≥ 45</code> en Miércoles 11:00-13:00.</div>
+              <div class="text-[11px] text-emerald-300">→ Detecta que Aula A1 (cap 48) pertenece a su dominio Aᵢ.</div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-800 border-2 border-sky-400 space-y-1">
+              <div class="font-bold text-sky-300">2. Inspección de Ocupante en A1</div>
+              <div class="text-white">Álgebra Superior NIB tiene solo <strong>20 inscritos</strong>.</div>
+              <div class="text-[11px] text-sky-200">→ Su dominio admisible incluye el Aula A18 (<code class="font-mono">cap 22 ≥ 20</code>).</div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-emerald-950/80 border-2 border-emerald-400 space-y-1">
+              <div class="font-bold text-emerald-300">3. Cadena Validada</div>
+              <div class="font-mono text-white">Sesión B → Aula A18 (22 ≥ 20)</div>
+              <div class="font-mono text-uaemex-gold">Sesión A → Aula A1 (48 ≥ 45)</div>
+              <div class="text-[11px] text-emerald-200">Ambos movimientos respetan H₁=0, H₂=0 y H₃=0.</div>
+            </div>
+          </div>
+        `;
+      } else {
+        box.innerHTML = `
+          <div class="flex items-center justify-between text-xs text-emerald-300 font-mono">
+            <span>PASO 2: CADENA DE INTERCAMBIO EJECUTADA CON ÉXITO</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-bold">H₁ = 0 | H₂ = 0 | 100% OCUPACIÓN</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <div class="p-4 rounded-xl bg-emerald-950/90 border-2 border-emerald-400 space-y-1">
+              <div class="font-bold text-uaemex-gold">✓ Sesión A: Macroeconomía (45 alumnos)</div>
+              <div class="font-mono text-sm text-white font-bold">Reubicada en Aula A1 (Edif B PB, Cap 48)</div>
+              <div class="text-[11px] text-emerald-200">Sobrecupo eliminado (3 butacas de holgura) y ubicada en Planta Baja.</div>
+            </div>
+            <div class="p-4 rounded-xl bg-emerald-950/90 border-2 border-emerald-400 space-y-1">
+              <div class="font-bold text-sky-300">✓ Sesión B: Álgebra Superior NIB (20 alumnos)</div>
+              <div class="font-mono text-sm text-white font-bold">Reubicada en Aula A18 (Edif D Piso 2, Cap 22)</div>
+              <div class="text-[11px] text-emerald-200">Ajuste exacto de aforo (desperdicio S₃ reducido de 28 a 2 butacas).</div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function togglePtcSwapDemo() {
+      ptcSwapResolved = !ptcSwapResolved;
+      const txt = document.getElementById('ptcSwapText');
+      const btn = document.getElementById('btnTogglePtcSwap');
+      if (ptcSwapResolved) {
+        txt.innerHTML = '✓ <strong>Swap Memético C Aplicado:</strong> <strong>Dr. Morales (PTC, 64 años)</strong> reubicado en <span class="font-mono font-bold text-emerald-800">Aula A2 (Edif B, Planta Baja, junto a cubículo)</span> y <strong>Mtro. Ruiz (29 años)</strong> en <span class="font-mono font-bold text-slate-800">Aula A24 (Edif D, Piso 4)</span>. Penalización S₅ reducida en -220 pts y S₆ reducida en -64 pts.';
+        btn.textContent = 'Revertir Estado Inicial';
+      } else {
+        txt.innerHTML = 'Estado actual: <strong>Dr. Morales (PTC, 64 años)</strong> en <span class="font-mono font-bold text-rose-700">Aula A24 (Edif D, Piso 4)</span> y <strong>Mtro. Ruiz (Asignatura, 29 años)</strong> en <span class="font-mono font-bold text-emerald-800">Aula A2 (Edif B, Planta Baja)</span>.';
+        btn.textContent = 'Aplicar Swap PTC / Edad';
+      }
+    }
+
+    // -----------------------------------------------------------------------
+    // 8. PASO 6: CALCULADORA INTERACTIVA DE FITNESS Y FACTOR 0.001
+    // -----------------------------------------------------------------------
+    function loadFitnessPreset(preset) {
+      if (preset === 'manual') {
+        document.getElementById('sliderH1').value = 0;
+        document.getElementById('sliderH2').value = 41;
+        document.getElementById('sliderS1').value = 2105;
+        document.getElementById('sliderS2').value = 14955;
+        document.getElementById('sliderS5').value = 48;
+        document.getElementById('sliderS7').value = 12;
+      } else if (preset === 'gen0') {
+        document.getElementById('sliderH1').value = 0;
+        document.getElementById('sliderH2').value = 0;
+        document.getElementById('sliderS1').value = 3450;
+        document.getElementById('sliderS2').value = 15800;
+        document.getElementById('sliderS5').value = 49;
+        document.getElementById('sliderS7').value = 37;
+      } else {
+        document.getElementById('sliderH1').value = 0;
+        document.getElementById('sliderH2').value = 0;
+        document.getElementById('sliderS1').value = 1720;
+        document.getElementById('sliderS2').value = 13100;
+        document.getElementById('sliderS5').value = 32;
+        document.getElementById('sliderS7').value = 14;
+      }
+      updateFitnessCalc();
+    }
+
+    function updateFitnessCalc() {
+      const h1 = parseInt(document.getElementById('sliderH1').value, 10);
+      const h2 = parseInt(document.getElementById('sliderH2').value, 10);
+      const s1 = parseInt(document.getElementById('sliderS1').value, 10);
+      const s2 = parseInt(document.getElementById('sliderS2').value, 10);
+      const s5 = parseInt(document.getElementById('sliderS5').value, 10);
+      const s7 = parseInt(document.getElementById('sliderS7').value, 10);
+      const useGamma = document.getElementById('chkGammaFactor').checked;
+
+      document.getElementById('valH1').textContent = h1;
+      document.getElementById('valH2').textContent = h2;
+      document.getElementById('valS1').textContent = s1.toLocaleString() + ' m';
+      document.getElementById('valS2').textContent = s2.toLocaleString() + ' m';
+      document.getElementById('valS5').textContent = s5 + ' ses';
+      document.getElementById('valS7').textContent = s7 + ' cambios';
+
+      // Términos S3, S4, S6 base del óptimo (para fidelidad exacta con 0.013318 en Gen 149)
+      const s3Cost = 620.0; // 0.1 * S3
+      const s4Cost = 35.0 * 215; // 7525
+      const s6Cost = 25.0 * 626.6; // 15665
+
+      const penDura = 10000 * h1 + 5000 * h2;
+      const penBlanda = 4.5 * s1 + 2.5 * s2 + s3Cost + s4Cost + 220.0 * s5 + s6Cost + 180.0 * s7;
+      const gamma = useGamma ? 0.001 : 1.0;
+      const denom = 1.0 + penDura + gamma * penBlanda;
+      const fit = 1.0 / denom;
+
+      document.getElementById('outPenDura').textContent = penDura.toLocaleString();
+      document.getElementById('outPenBlanda').textContent = Math.round(penBlanda).toLocaleString();
+      document.getElementById('outFitnessVal').textContent = useGamma ? fit.toFixed(6) : fit.toExponential(3);
+      document.getElementById('fitnessLiveFormula').textContent =
+        `1 / (1.0 + ${penDura.toLocaleString()} + ${gamma} × ${ penBlanda.toFixed(1) }) = ${useGamma ? fit.toFixed(6) : fit.toExponential(4)}`;
+    }
+
+    // -----------------------------------------------------------------------
+    // 9. PASO 7: EVOLUCIÓN EN VIVO (150 GENERACIONES REALES Y GRÁFICAS)
+    // -----------------------------------------------------------------------
+    const EVO_HISTORY = [
+      { gen: 0, fit: 0.010162, meanFit: 0.009410, s1: 3450, s2: 15820, s5: 49, s6: 642.3, s7: 37, t: 0.12 },
+      { gen: 15, fit: 0.011038, meanFit: 0.010320, s1: 2640, s2: 14790, s5: 45, s6: 632.3, s7: 31, t: 1.98 },
+      { gen: 30, fit: 0.011688, meanFit: 0.011105, s1: 2420, s2: 14210, s5: 40, s6: 620.5, s7: 21, t: 3.85 },
+      { gen: 45, fit: 0.012105, meanFit: 0.011640, s1: 2155, s2: 13840, s5: 36, s6: 626.6, s7: 18, t: 5.72 },
+      { gen: 60, fit: 0.012453, meanFit: 0.012080, s1: 2025, s2: 13590, s5: 34, s6: 629.3, s7: 14, t: 7.58 },
+      { gen: 75, fit: 0.012657, meanFit: 0.012350, s1: 1825, s2: 13380, s5: 32, s6: 629.2, s7: 14, t: 9.45 },
+      { gen: 90, fit: 0.012682, meanFit: 0.012460, s1: 1825, s2: 13310, s5: 32, s6: 629.2, s7: 14, t: 11.30 },
+      { gen: 105, fit: 0.012859, meanFit: 0.012610, s1: 1810, s2: 13240, s5: 32, s6: 633.7, s7: 15, t: 13.18 },
+      { gen: 120, fit: 0.013085, meanFit: 0.012840, s1: 1810, s2: 13170, s5: 32, s6: 627.5, s7: 14, t: 15.04 },
+      { gen: 135, fit: 0.013180, meanFit: 0.012990, s1: 1720, s2: 13120, s5: 32, s6: 626.6, s7: 14, t: 16.90 },
+      { gen: 149, fit: 0.013318, meanFit: 0.013150, s1: 1720, s2: 13100, s5: 32, s6: 626.6, s7: 14, t: 18.71 }
+    ];
+
+    let chartFitnessInst = null;
+    let chartS1Inst = null;
+    let chartAgeInst = null;
+    let evoPlayTimer = null;
+
+    function onSliderEvoChange(idxStr) {
+      const idx = parseInt(idxStr, 10);
+      const row = EVO_HISTORY[idx] || EVO_HISTORY[10];
+
+      document.getElementById('evoGenLabel').textContent =
+        `Generación: ${String(row.gen).padStart(3, '0')} / 149 ${row.gen === 149 ? '(Óptimo Convergente)' : ''}`;
+      document.getElementById('evoTimeLabel').textContent = `Tiempo de cómputo acumulado: ${row.t.toFixed(2)} s`;
+      document.getElementById('teleFit').textContent = row.fit.toFixed(6);
+      document.getElementById('teleS1').textContent = row.s1.toLocaleString() + ' m';
+      const diffManual = row.s1 - 2105;
+      document.getElementById('teleS1Sub').textContent =
+        diffManual <= 0 ? `${diffManual} m vs Manual (${((diffManual / 2105) * 100).toFixed(1)}%)` : `+${diffManual} m vs Manual`;
+      document.getElementById('teleS5').textContent = row.s5 + ' ses';
+      const ptcPct = ((183 - row.s5) / 183 * 100).toFixed(1);
+      document.getElementById('teleS5Sub').textContent = `${ptcPct}% en B/C (${183 - row.s5}/183)`;
+      document.getElementById('teleS6').textContent = row.s6.toFixed(1);
+      document.getElementById('teleS7').textContent = row.s7;
+
+      updateChartsUpToIndex(idx);
+    }
+
+    function togglePlayEvolution() {
+      const icon = document.getElementById('playEvoIcon');
+      const txt = document.getElementById('playEvoText');
+      const slider = document.getElementById('sliderEvoGen');
+
+      if (evoPlayTimer) {
+        clearInterval(evoPlayTimer);
+        evoPlayTimer = null;
+        icon.textContent = '▶';
+        txt.textContent = 'Simular Evolución';
+      } else {
+        if (parseInt(slider.value, 10) >= 10) {
+          slider.value = 0;
+          onSliderEvoChange(0);
+        }
+        icon.textContent = '⏸';
+        txt.textContent = 'Pausar';
+        evoPlayTimer = setInterval(() => {
+          let cur = parseInt(slider.value, 10);
+          if (cur < 10) {
+            cur++;
+            slider.value = cur;
+            onSliderEvoChange(cur);
+          } else {
+            clearInterval(evoPlayTimer);
+            evoPlayTimer = null;
+            icon.textContent = '▶';
+            txt.textContent = 'Simular Evolución';
+          }
+        }, 650);
+      }
+    }
+
+    function resetEvolution() {
+      if (evoPlayTimer) {
+        clearInterval(evoPlayTimer);
+        evoPlayTimer = null;
+        document.getElementById('playEvoIcon').textContent = '▶';
+        document.getElementById('playEvoText').textContent = 'Simular Evolución';
+      }
+      document.getElementById('sliderEvoGen').value = 0;
+      onSliderEvoChange(0);
+    }
+
+    function initOrUpdateCharts() {
+      const idx = parseInt(document.getElementById('sliderEvoGen').value, 10);
+      const slice = EVO_HISTORY.slice(0, idx + 1);
+      const labels = slice.map(x => 'Gen ' + x.gen);
+
+      if (!chartFitnessInst) {
+        const ctx1 = document.getElementById('chartFitness').getContext('2d');
+        chartFitnessInst = new Chart(ctx1, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: 'Mejor Fitness (AG Memético)',
+                data: slice.map(x => x.fit),
+                borderColor: '#1b4d3e',
+                backgroundColor: 'rgba(27, 77, 62, 0.12)',
+                borderWidth: 2.5,
+                fill: true,
+                tension: 0.25
+              },
+              {
+                label: 'Fitness Promedio Población',
+                data: slice.map(x => x.meanFit),
+                borderColor: '#c59b27',
+                borderDash: [5, 5],
+                borderWidth: 2,
+                fill: false,
+                tension: 0.25
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } },
+            scales: { y: { min: 0.009, max: 0.014 } }
+          }
+        });
+
+        const ctx2 = document.getElementById('chartS1').getContext('2d');
+        chartS1Inst = new Chart(ctx2, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: 'S₁ Caminata Docente (m)',
+                data: slice.map(x => x.s1),
+                borderColor: '#2e7d5e',
+                backgroundColor: 'rgba(46, 125, 94, 0.15)',
+                borderWidth: 2.5,
+                fill: true,
+                tension: 0.25
+              },
+              {
+                label: 'Manual Original (2,105 m)',
+                data: slice.map(() => 2105),
+                borderColor: '#e11d48',
+                borderDash: [4, 4],
+                borderWidth: 1.8,
+                pointRadius: 0,
+                fill: false
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } },
+            scales: { y: { min: 1500, max: 3600 } }
+          }
+        });
+
+        const ctx3 = document.getElementById('chartAgeBuilding').getContext('2d');
+        chartAgeInst = new Chart(ctx3, {
+          type: 'bar',
+          data: {
+            labels: ['Edif B (Rango 0)', 'Edif C (Rango 1)', 'Edif D (Rango 2)', 'Edif E (Rango 3)'],
+            datasets: [
+              {
+                label: 'Edad Mediana Docente (Años)',
+                data: [53.3, 50.1, 46.9, 48.1],
+                backgroundColor: ['#1b4d3e', '#2e7d5e', '#74a88e', '#c59b27'],
+                borderRadius: 6
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } },
+            scales: { y: { min: 40, max: 58 } }
+          }
+        });
+      } else {
+        updateChartsUpToIndex(idx);
+      }
+    }
+
+    function updateChartsUpToIndex(idx) {
+      if (!chartFitnessInst || !chartS1Inst) return;
+      const slice = EVO_HISTORY.slice(0, idx + 1);
+      const labels = slice.map(x => 'Gen ' + x.gen);
+
+      chartFitnessInst.data.labels = labels;
+      chartFitnessInst.data.datasets[0].data = slice.map(x => x.fit);
+      chartFitnessInst.data.datasets[1].data = slice.map(x => x.meanFit);
+      chartFitnessInst.update();
+
+      chartS1Inst.data.labels = labels;
+      chartS1Inst.data.datasets[0].data = slice.map(x => x.s1);
+      chartS1Inst.data.datasets[1].data = slice.map(() => 2105);
+      chartS1Inst.update();
+    }
+
+    // -----------------------------------------------------------------------
+    // 10. PASO 8: SIMULADOR DEL PIPELINE AUTOMATIZADO 2027A
+    // -----------------------------------------------------------------------
+    let is2027Optimized = false;
+
+    function reset2027Simulator() {
+      is2027Optimized = false;
+      render2027Table();
+      document.getElementById('daemonConsole2027').innerHTML = `
+        <div class="text-slate-400">[Watchdog Daemon] Supervisando Plantilla_Entrada_Planta_2027A.xlsx...</div>
+        <div>&gt; Regla de Oro verificada: Columnas L, Ma, Mi, J, V, S están EN BLANCO.</div>
+        <div class="text-uaemex-gold">&gt; Haz clic en "Guardar (Ctrl+G) y Optimizar" para disparar Fase 1 y Fase 2.</div>
+      `;
+    }
+
+    function run2027PipelineSim() {
+      is2027Optimized = true;
+      render2027Table();
+
+      const materia = document.getElementById('inp2027Materia').value;
+      const docenteVal = document.getElementById('inp2027Docente').value;
+      const rango = document.getElementById('inp2027Rango').value;
+      const fakeHash = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'.slice(0, 16);
+
+      document.getElementById('daemonConsole2027').innerHTML = `
+        <div class="text-amber-300">[Watchdog Daemon] ¡Cambio detectado por firma de tiempo en Plantilla_Entrada_Planta_2027A.xlsx!</div>
+        <div>&gt; [FASE 1: Motor Constructivo] Filtrando 379 materias de semestres pares (2, 4, 6, 8, 10)...</div>
+        <div>&gt; [FASE 1] Sintetizando bloques dentro de RANGO_DOCENTE_LV (${rango}) para "${materia}" → H_doc = 0, H_grupo = 0.</div>
+        <div>&gt; [FASE 2: AG Memético Vectorizado] Asignando 34 aulas a 685 sesiones presenciales (Docente=${docenteVal})...</div>
+        <div class="text-white font-bold">&gt; ✓ Optimización 2027A completada en 23.4 s | 91.9% PTC en Edif B/C | 98.5% estabilidad semanal | Hash SHA-256 Portal: ${fakeHash}...</div>
+      `;
+    }
+
+    function render2027Table() {
+      const materia = document.getElementById('inp2027Materia').value;
+      const docenteKey = document.getElementById('inp2027Docente').value;
+      const rango = document.getElementById('inp2027Rango').value;
+      const cupoKey = document.getElementById('inp2027Cupo').value;
+
+      const docenteLabel = docenteKey === 'PTC_61' ? 'Dr. Hernández (PTC, 61a)'
+        : (docenteKey === 'PTC_54' ? 'Dra. Gómez (PTC, 54a)' : 'Mtro. Ortega (Asig, 31a)');
+
+      let slotL = '', slotMa = '', slotMi = '', slotJ = '', slotV = '', aulaAsignada = 'PENDIENTE';
+      if (is2027Optimized) {
+        if (rango === '07:00-13:00') {
+          slotL = '09:00-11:00';
+          slotMi = '09:00-11:00';
+        } else if (rango === '09:00-15:00') {
+          slotMa = '11:00-13:00';
+          slotJ = '11:00-13:00';
+        } else {
+          slotL = '17:00-19:00';
+          slotMi = '17:00-19:00';
+        }
+
+        if (cupoKey === '34_Computo') {
+          aulaAsignada = docenteKey.startsWith('PTC') ? 'SC_C (Edif C P2)' : 'SC_H (Edif E P1)';
+        } else if (cupoKey === '44_Teorica') {
+          aulaAsignada = docenteKey === 'PTC_61' ? 'A1 (Edif B PB)' : 'A17 (Edif D PB)';
+        } else {
+          aulaAsignada = docenteKey.startsWith('PTC') ? 'A6 (Edif B P2)' : 'A21 (Edif D P3)';
+        }
+      }
+
+      const emptyBadge = '<span class="text-slate-400 italic">[VACÍO]</span>';
+      const tbody = document.getElementById('table2027Body');
+      tbody.innerHTML = `
+        <tr class="${is2027Optimized ? 'bg-emerald-50/70' : 'bg-white'}">
+          <td class="p-2 font-sans font-bold text-slate-900">${materia}</td>
+          <td class="p-2 font-sans text-slate-700">${docenteLabel}</td>
+          <td class="p-2 text-center font-bold text-uaemex-green">${rango}</td>
+          <td class="p-2 text-center ${slotL ? 'font-bold text-emerald-800 bg-emerald-100/60' : ''}">${slotL || emptyBadge}</td>
+          <td class="p-2 text-center ${slotMa ? 'font-bold text-emerald-800 bg-emerald-100/60' : ''}">${slotMa || emptyBadge}</td>
+          <td class="p-2 text-center ${slotMi ? 'font-bold text-emerald-800 bg-emerald-100/60' : ''}">${slotMi || emptyBadge}</td>
+          <td class="p-2 text-center ${slotJ ? 'font-bold text-emerald-800 bg-emerald-100/60' : ''}">${slotJ || emptyBadge}</td>
+          <td class="p-2 text-center ${slotV ? 'font-bold text-emerald-800 bg-emerald-100/60' : ''}">${slotV || emptyBadge}</td>
+          <td class="p-2 text-center font-bold ${is2027Optimized ? 'text-white bg-uaemex-green' : 'text-amber-800 bg-amber-50'}">${aulaAsignada}</td>
+        </tr>
+        <tr class="bg-slate-50/70 text-slate-600">
+          <td class="p-2 font-sans font-semibold">LNIB18 — Negociación Int. (LNIB S4)</td>
+          <td class="p-2 font-sans">Dra. Salgado (PTC, 52a)</td>
+          <td class="p-2 text-center">07:00-14:00</td>
+          <td class="p-2 text-center">${is2027Optimized ? '07:00-09:00' : emptyBadge}</td>
+          <td class="p-2 text-center">${emptyBadge}</td>
+          <td class="p-2 text-center">${is2027Optimized ? '07:00-09:00' : emptyBadge}</td>
+          <td class="p-2 text-center">${emptyBadge}</td>
+          <td class="p-2 text-center">${is2027Optimized ? '07:00-09:00' : emptyBadge}</td>
+          <td class="p-2 text-center font-bold ${is2027Optimized ? 'text-emerald-800' : 'text-slate-400'}">${is2027Optimized ? 'A12 (Edif C PB)' : 'PENDIENTE'}</td>
+        </tr>
+      `;
+    }
+
+    // -----------------------------------------------------------------------
+    // INICIALIZACIÓN GLOBAL AL CARGAR LA VENTANA
+    // -----------------------------------------------------------------------
+    window.addEventListener('DOMContentLoaded', () => {
+      initDistanceSelects();
+      updateDomainSim();
+      initTensorSim();
+      setCrossoverMode('course');
+      setSwapPhase(0);
+      updateFitnessCalc();
+      onSliderEvoChange(10);
+      reset2027Simulator();
+    });
+  </script>
+</body>
+</html>
