@@ -246,14 +246,14 @@
           <!-- Botones rápidos de ejemplos del Notebook -->
           <div class="flex flex-wrap items-center gap-2 pt-1">
             <span class="text-[11px] font-semibold text-slate-500">Casos del Notebook:</span>
-            <button onclick="setDistancePreset('A17', 'A24')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 hover:bg-uaemex-mint hover:text-uaemex-green transition">
-              Intra-Edificio D (A17 PB → A24 Piso 4 = 45 m)
+            <button onclick="setDistancePreset('SC_G', 'A24')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 hover:bg-uaemex-mint hover:text-uaemex-green transition">
+              Intra-Edificio D (SC_G 2do Niv → A24 4to Niv = 30 m)
             </button>
-            <button onclick="setDistancePreset('A1', 'A12')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 hover:bg-uaemex-mint hover:text-uaemex-green transition">
-              Inter-Edificio B→C PB (A1 → A12 = 35 m)
+            <button onclick="setDistancePreset('A1', 'A14')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 hover:bg-uaemex-mint hover:text-uaemex-green transition">
+              Inter-Edificio B→C (A1 2do Niv → A14 2do Niv = 35 m)
             </button>
-            <button onclick="setDistancePreset('A1', 'SC_G')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 hover:bg-uaemex-mint hover:text-uaemex-green transition">
-              Máxima Dispersión (A1 Edif B → SC_G Edif D P4 = 110 m)
+            <button onclick="setDistancePreset('A1', 'A24')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 hover:bg-uaemex-mint hover:text-uaemex-green transition">
+              Máxima Dispersión (A1 Edif B 2°N → A24 Edif D 4°N = 95 m)
             </button>
           </div>
 
@@ -288,7 +288,7 @@
                 <rect id="nodeEdifB" width="120" height="80" rx="10" fill="#1b4d3e" stroke="#c59b27" stroke-width="3" />
                 <text x="60" y="24" text-anchor="middle" fill="#facc15" font-size="12" font-weight="bold">EDIFICIO B</text>
                 <text x="60" y="42" text-anchor="middle" fill="#ffffff" font-size="10">A1-A11 + Cubículos PTC</text>
-                <text x="60" y="58" text-anchor="middle" fill="#a7f3d0" font-size="9">11 Aulas Teóricas (3 niveles)</text>
+                <text x="60" y="58" text-anchor="middle" fill="#a7f3d0" font-size="9">11 Teóricas (todas en 2° Niv)</text>
                 <text x="60" y="71" text-anchor="middle" fill="#fde68a" font-size="9">Rango Edad: 0 (Preferente)</text>
               </g>
 
@@ -296,8 +296,8 @@
               <g transform="translate(300, 80)">
                 <rect id="nodeEdifC" width="120" height="80" rx="10" fill="#1e293b" stroke="#64748b" stroke-width="2" />
                 <text x="60" y="24" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">EDIFICIO C</text>
-                <text x="60" y="42" text-anchor="middle" fill="#ffffff" font-size="10">A12-A16, LK, LC + SC_C/D</text>
-                <text x="60" y="58" text-anchor="middle" fill="#cbd5e1" font-size="9">7 Teóricas + 2 Cómputo</text>
+                <text x="60" y="42" text-anchor="middle" fill="#ffffff" font-size="10">A12-16, LK, LC + SC_C/D</text>
+                <text x="60" y="58" text-anchor="middle" fill="#cbd5e1" font-size="9">7 Teór.(N1-2) + 2 SC(N1)</text>
                 <text x="60" y="71" text-anchor="middle" fill="#94a3b8" font-size="9">Rango Edad: 1 (Central)</text>
               </g>
 
@@ -305,9 +305,9 @@
               <g transform="translate(475, 25)">
                 <rect id="nodeEdifD" width="145" height="90" rx="10" fill="#1e293b" stroke="#64748b" stroke-width="2" />
                 <text x="72" y="24" text-anchor="middle" fill="#f472b6" font-size="12" font-weight="bold">EDIFICIO D (TORRE)</text>
-                <text x="72" y="42" text-anchor="middle" fill="#ffffff" font-size="10">A17-A24 + Salas SC_E, F, G</text>
+                <text x="72" y="42" text-anchor="middle" fill="#ffffff" font-size="10">SC_E-G(N2) + A17-24(N3-4)</text>
                 <text x="72" y="58" text-anchor="middle" fill="#cbd5e1" font-size="9">8 Teóricas + 3 Cómputo</text>
-                <text x="72" y="73" text-anchor="middle" fill="#fda4af" font-size="9">Hasta 4 Pisos • Rango Edad: 2</text>
+                <text x="72" y="73" text-anchor="middle" fill="#fda4af" font-size="9">Torre 5 Niv • Rango Edad: 2</text>
               </g>
 
               <!-- Nodo Edificio E -->
@@ -540,7 +540,7 @@
             <div>
               <div class="flex justify-between text-xs font-bold text-uaemex-green mb-1">
                 <span>Broadcasting Tensorial 3D (NumPy C/SIMD)</span>
-                <span class="font-mono">0.12 s / gen (18.71 s total)</span>
+                <span class="font-mono">0.12 s / gen (18.06 s total)</span>
               </div>
               <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
                 <div class="bg-uaemex-green h-3 rounded-full" style="width: 2%"></div>
@@ -736,7 +736,7 @@
             <div class="space-y-1 text-xs">
               <div class="font-bold text-amber-950">Prueba rápida: Sub-operador C (Prioridad PTC y Edad S₅ / S₆)</div>
               <p id="ptcSwapText" class="text-amber-900">
-                Estado actual: <strong>Dr. Morales (PTC, 64 años)</strong> en <span class="font-mono font-bold text-rose-700">Aula A24 (Edif D, Piso 4)</span> y <strong>Mtro. Ruiz (Asignatura, 29 años)</strong> en <span class="font-mono font-bold text-emerald-800">Aula A2 (Edif B, Planta Baja)</span>.
+                Estado actual: <strong>Dr. Morales (PTC, 64 años)</strong> en <span class="font-mono font-bold text-rose-700">Aula A24 (Edif D, 4to Nivel)</span> y <strong>Mtro. Ruiz (Asignatura, 29 años)</strong> en <span class="font-mono font-bold text-emerald-800">Aula A2 (Edif B, 2do Nivel)</span>.
               </p>
             </div>
             <button id="btnTogglePtcSwap" onclick="togglePtcSwapDemo()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-uaemex-green text-white hover:bg-uaemex-dark transition shrink-0 shadow">
@@ -810,7 +810,7 @@
           <!-- Ecuación -->
           <div class="bg-slate-900 text-white p-3.5 rounded-xl font-mono text-xs text-center space-y-1">
             <div class="text-uaemex-gold font-bold">Fitness(c) = 1 / (1.0 + P_dura(c) + γ · P_blanda(c))</div>
-            <div id="fitnessLiveFormula" class="text-[11px] text-emerald-300">1 / (1.0 + 0 + 0.001 × 74,086.5) = 0.013318</div>
+            <div id="fitnessLiveFormula" class="text-[11px] text-emerald-300">1 / (1.0 + 0 + 0.001 × 67,507.9) = 0.014597</div>
           </div>
 
           <!-- Sliders de Restricciones Duras (H1, H2, H3) y Blandas (S1..S7) -->
@@ -848,51 +848,51 @@
                 <div>
                   <div class="flex justify-between font-semibold text-slate-700">
                     <label for="sliderS1">S₁ Dist. Docente (×4.5):</label>
-                    <span id="valS1" class="font-mono text-uaemex-green">1,720 m</span>
+                    <span id="valS1" class="font-mono text-uaemex-green">1,790 m</span>
                   </div>
-                  <input id="sliderS1" type="range" min="1200" max="4000" step="15" value="1720" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
+                  <input id="sliderS1" type="range" min="1200" max="4000" step="10" value="1790" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
                 </div>
                 <div>
                   <div class="flex justify-between font-semibold text-slate-700">
                     <label for="sliderS2">S₂ Dist. Alumnos (×2.5):</label>
-                    <span id="valS2" class="font-mono text-uaemex-green">13,100 m</span>
+                    <span id="valS2" class="font-mono text-uaemex-green">10,380 m</span>
                   </div>
-                  <input id="sliderS2" type="range" min="10000" max="18000" step="50" value="13100" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
+                  <input id="sliderS2" type="range" min="9000" max="16000" step="10" value="10380" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
                 </div>
                 <div>
                   <div class="flex justify-between font-semibold text-slate-700">
                     <label for="sliderS3">S₃ Butacas Vacías (×0.1):</label>
-                    <span id="valS3" class="font-mono text-uaemex-green">6,200 but</span>
+                    <span id="valS3" class="font-mono text-uaemex-green">8,504 but</span>
                   </div>
-                  <input id="sliderS3" type="range" min="3000" max="15000" step="100" value="6200" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
+                  <input id="sliderS3" type="range" min="3000" max="15000" step="1" value="8504" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
                 </div>
                 <div>
                   <div class="flex justify-between font-semibold text-slate-700">
                     <label for="sliderS4">S₄ Saltos Edificio (×35.0):</label>
-                    <span id="valS4" class="font-mono text-uaemex-green">215 saltos</span>
+                    <span id="valS4" class="font-mono text-uaemex-green">216 saltos</span>
                   </div>
-                  <input id="sliderS4" type="range" min="150" max="320" step="1" value="215" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
+                  <input id="sliderS4" type="range" min="150" max="320" step="1" value="216" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
                 </div>
                 <div>
                   <div class="flex justify-between font-semibold text-slate-700">
                     <label for="sliderS5">S₅ PTC fuera B/C (×220.0):</label>
-                    <span id="valS5" class="font-mono text-uaemex-green">32 ses</span>
+                    <span id="valS5" class="font-mono text-uaemex-green">36 ses</span>
                   </div>
-                  <input id="sliderS5" type="range" min="0" max="80" value="32" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
+                  <input id="sliderS5" type="range" min="0" max="80" value="36" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
                 </div>
                 <div>
                   <div class="flex justify-between font-semibold text-slate-700">
                     <label for="sliderS6">S₆ Costo Edad (×25.0):</label>
-                    <span id="valS6" class="font-mono text-uaemex-green">626.6 pts</span>
+                    <span id="valS6" class="font-mono text-uaemex-green">622.1 pts</span>
                   </div>
-                  <input id="sliderS6" type="range" min="550" max="720" step="0.5" value="626.6" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
+                  <input id="sliderS6" type="range" min="550" max="720" step="0.1" value="622.1" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
                 </div>
                 <div class="sm:col-span-2">
                   <div class="flex justify-between font-semibold text-slate-700">
                     <label for="sliderS7">S₇ Cambio Salón Semanal intra-Curso (×180.0):</label>
-                    <span id="valS7" class="font-mono text-uaemex-green">14 cambios</span>
+                    <span id="valS7" class="font-mono text-uaemex-green">9 cambios</span>
                   </div>
-                  <input id="sliderS7" type="range" min="0" max="60" value="14" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
+                  <input id="sliderS7" type="range" min="0" max="60" value="9" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
                 </div>
               </div>
             </div>
@@ -918,11 +918,11 @@
             </div>
             <div class="p-3 rounded-xl bg-slate-100 border border-slate-200">
               <div class="text-[11px] text-slate-500">Penalización Blanda</div>
-              <div id="outPenBlanda" class="text-base font-extrabold text-slate-800 font-mono">74,087</div>
+              <div id="outPenBlanda" class="text-base font-extrabold text-slate-800 font-mono">67,508</div>
             </div>
             <div class="p-3 rounded-xl bg-uaemex-green text-white shadow">
               <div class="text-[11px] text-emerald-100">Fitness Final f(c)</div>
-              <div id="outFitnessVal" class="text-lg font-extrabold text-uaemex-gold font-mono">0.013318</div>
+              <div id="outFitnessVal" class="text-lg font-extrabold text-uaemex-gold font-mono">0.014597</div>
             </div>
           </div>
         </div>
@@ -1023,7 +1023,7 @@
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h3 class="text-base font-bold text-slate-900">Reproductor Evolutivo de las 150 Generaciones Reales (Periodo 2026A)</h3>
-            <p class="text-xs text-slate-500">Recorre la bitácora real de convergencia (<code class="font-mono">Pop=100, N=681 sesiones, t=18.71 s</code>) o reprodúcela automáticamente.</p>
+            <p class="text-xs text-slate-500">Recorre la bitácora real de convergencia (<code class="font-mono">Pop=100, N=681 sesiones, t=18.06 s</code>) o reprodúcela automáticamente.</p>
           </div>
           <div class="flex items-center gap-2">
             <button id="btnPlayEvo" onclick="togglePlayEvolution()" class="px-4 py-2 rounded-xl text-xs font-bold bg-uaemex-green text-white hover:bg-uaemex-dark transition flex items-center gap-1.5 shadow">
@@ -1040,7 +1040,7 @@
         <div class="space-y-1">
           <div class="flex justify-between text-xs font-mono font-bold">
             <span id="evoGenLabel" class="text-uaemex-green text-sm">Generación: 149 / 149 (Óptimo Convergente)</span>
-            <span id="evoTimeLabel" class="text-slate-500">Tiempo de cómputo acumulado: 18.71 s</span>
+            <span id="evoTimeLabel" class="text-slate-500">Tiempo de cómputo acumulado: 18.06 s</span>
           </div>
           <input id="sliderEvoGen" type="range" min="0" max="10" value="10" oninput="onSliderEvoChange(this.value)" class="w-full accent-uaemex-green cursor-pointer" />
           <div class="flex justify-between text-[10px] font-mono text-slate-400">
@@ -1052,8 +1052,8 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 pt-1">
           <div class="p-3 rounded-xl bg-slate-900 text-white">
             <div class="text-[10px] text-slate-400 uppercase font-mono">Fitness f(c)</div>
-            <div id="teleFit" class="text-lg font-extrabold text-uaemex-gold font-mono">0.013318</div>
-            <div class="text-[10px] text-emerald-400 font-mono">+31.1% vs Gen 0</div>
+            <div id="teleFit" class="text-lg font-extrabold text-uaemex-gold font-mono">0.014597</div>
+            <div class="text-[10px] text-emerald-400 font-mono">+35.9% vs Gen 0</div>
           </div>
           <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
             <div class="text-[10px] text-emerald-800 uppercase font-bold">H₁, H₂, H₃ (Duras)</div>
@@ -1062,23 +1062,23 @@
           </div>
           <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
             <div class="text-[10px] text-slate-500 uppercase font-bold">S₁ Caminata Docente</div>
-            <div id="teleS1" class="text-lg font-extrabold text-slate-900 font-mono">1,720 m</div>
-            <div id="teleS1Sub" class="text-[10px] text-emerald-700 font-semibold">-385 m vs Manual (-18.3%)</div>
+            <div id="teleS1" class="text-lg font-extrabold text-slate-900 font-mono">1,790 m</div>
+            <div id="teleS1Sub" class="text-[10px] text-emerald-700 font-semibold">-195 m vs Manual (-9.8%)</div>
           </div>
           <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
             <div class="text-[10px] text-slate-500 uppercase font-bold">S₅ PTC fuera de B/C</div>
-            <div id="teleS5" class="text-lg font-extrabold text-slate-900 font-mono">32 ses</div>
-            <div id="teleS5Sub" class="text-[10px] text-emerald-700 font-semibold">82.5% en B/C (151/183)</div>
+            <div id="teleS5" class="text-lg font-extrabold text-slate-900 font-mono">36 ses</div>
+            <div id="teleS5Sub" class="text-[10px] text-emerald-700 font-semibold">80.3% en B/C (147/183)</div>
           </div>
           <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
             <div class="text-[10px] text-slate-500 uppercase font-bold">S₆ Costo Edad Docente</div>
-            <div id="teleS6" class="text-lg font-extrabold text-slate-900 font-mono">626.6</div>
-            <div class="text-[10px] text-emerald-700 font-semibold">Manual: 642.3</div>
+            <div id="teleS6" class="text-lg font-extrabold text-slate-900 font-mono">622.1</div>
+            <div class="text-[10px] text-emerald-700 font-semibold">Manual: 632.7</div>
           </div>
           <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
             <div class="text-[10px] text-slate-500 uppercase font-bold">S₇ Cambios Salón Sem</div>
-            <div id="teleS7" class="text-lg font-extrabold text-slate-900 font-mono">14</div>
-            <div class="text-[10px] text-emerald-700 font-semibold">99.6% cursos fijos</div>
+            <div id="teleS7" class="text-lg font-extrabold text-slate-900 font-mono">9</div>
+            <div class="text-[10px] text-emerald-700 font-semibold">98.7% sesiones estables</div>
           </div>
         </div>
       </div>
@@ -1140,32 +1140,32 @@
               <tr class="bg-emerald-50/40">
                 <td class="p-2.5 font-semibold">Sesiones PTC en Edificios B o C (S₅)</td>
                 <td class="p-2.5 text-center font-mono">135 / 183 (73.8%)</td>
-                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">151 / 183 (82.5%)</td>
-                <td class="p-2.5 text-emerald-700 font-bold">+16 clases cerca de cubículo (+8.7 pts)</td>
+                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">147 / 183 (80.3%)</td>
+                <td class="p-2.5 text-emerald-700 font-bold">+12 clases cerca de cubículo (+6.5 pts)</td>
               </tr>
               <tr>
                 <td class="p-2.5 font-semibold">Traslado Peatonal Docente Semanal (S₁)</td>
-                <td class="p-2.5 text-center font-mono">2,105 m</td>
-                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">1,720 m</td>
-                <td class="p-2.5 text-emerald-700 font-semibold">-385 metros semanales (-18.3%)</td>
+                <td class="p-2.5 text-center font-mono">1,985 m</td>
+                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">1,790 m</td>
+                <td class="p-2.5 text-emerald-700 font-semibold">-195 metros semanales (-9.8%)</td>
               </tr>
               <tr>
                 <td class="p-2.5 font-semibold">Traslado Peatonal Estudiantil Semanal (S₂)</td>
-                <td class="p-2.5 text-center font-mono">14,955 m</td>
-                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">13,100 m</td>
-                <td class="p-2.5 text-emerald-700 font-semibold">-1,855 metros semanales (-12.4%)</td>
+                <td class="p-2.5 text-center font-mono">12,615 m</td>
+                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">10,380 m</td>
+                <td class="p-2.5 text-emerald-700 font-semibold">-2,235 metros semanales (-17.7%)</td>
               </tr>
               <tr>
                 <td class="p-2.5 font-semibold">Cambios de Edificio por Grupo/Día (S₄)</td>
                 <td class="p-2.5 text-center font-mono">252 saltos</td>
-                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">215 saltos</td>
-                <td class="p-2.5 text-emerald-700 font-semibold">-37 transiciones entre edificios (-14.7%)</td>
+                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">216 saltos</td>
+                <td class="p-2.5 text-emerald-700 font-semibold">-36 transiciones entre edificios (-14.3%)</td>
               </tr>
               <tr>
                 <td class="p-2.5 font-semibold">Inconsistencia Semanal de Salón (S₇)</td>
                 <td class="p-2.5 text-center font-mono">12 cambios</td>
-                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">14 cambios</td>
-                <td class="p-2.5 text-emerald-700 font-semibold">99.6% de cursos con salón fijo toda la semana</td>
+                <td class="p-2.5 text-center font-mono font-bold text-emerald-700">9 cambios</td>
+                <td class="p-2.5 text-emerald-700 font-semibold">98.7% de sesiones estables (681 sesiones)</td>
               </tr>
               <tr>
                 <td class="p-2.5 font-semibold">Brechas de Traslado Virtual MT &lt; 2h</td>
@@ -1191,12 +1191,12 @@
           </div>
           <h3 class="text-base font-bold text-slate-900">La "Regla de Oro": Capturar solo Docente y Rango Horario</h3>
           <p class="text-xs text-slate-600">
-            Para el semestre par <strong>2027A</strong> (379 materias de semestres pares <code class="font-mono">2, 4, 6, 8, 10</code> y 685 sesiones presenciales, tras filtrar 341 materias impares de 2026B), las jefaturas de carrera ya no necesitan armar horarios a mano.
+            Para el semestre par <strong>2027A</strong> (379 materias de semestres pares <code class="font-mono">2, 4, 6, 8, 10</code> y 674 sesiones presenciales, tras filtrar 341 materias impares de 2026B), las jefaturas de carrera ya no necesitan armar horarios a mano.
           </p>
 
           <div class="bg-amber-50 border-l-4 border-uaemex-gold p-3.5 rounded-r-xl space-y-1 text-xs">
             <div class="font-extrabold text-amber-950">¡REGLA DE ORO DE LA AUTOMATIZACIÓN!</div>
-            <p class="text-amber-900">Deja las columnas <code class="font-mono font-bold">L, Ma, Mi, J, V, S</code> <strong>TOTALMENTE EN BLANCO</strong> en <code class="font-mono">1_Oferta_Cursos_2027A</code>. El motor constructivo de Fase 1 sintetiza el horario sin choques dentro del <code class="font-mono">RANGO_DOCENTE_LV</code> y la Fase 2 inyecta el aula óptima en 25 segundos.</p>
+            <p class="text-amber-900">Deja las columnas <code class="font-mono font-bold">L, Ma, Mi, J, V, S</code> <strong>TOTALMENTE EN BLANCO</strong> en <code class="font-mono">1_Oferta_Cursos_2027A</code>. El motor constructivo de Fase 1 sintetiza el horario sin choques dentro del <code class="font-mono">RANGO_DOCENTE_LV</code> y la Fase 2 inyecta el aula óptima en ~18 segundos.</p>
           </div>
 
           <div class="space-y-2 text-xs">
@@ -1206,7 +1206,7 @@
             </div>
             <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
               <div class="font-bold text-uaemex-green">FASE 2: Motor Genético Memético + Portal SHA-256</div>
-              <p class="text-[11px] text-slate-600 mt-0.5">Asigna las 34 aulas a las 685 sesiones de 2027A logrando <strong>91.9% de PTC en Edificios B/C</strong> y <strong>98.5% de estabilidad semanal</strong>, inyecta en Excel preservando <code class="font-mono">'Mapeo'</code> y <code class="font-mono">'PUERTAS'</code>, y publica el portal web protegido con SHA-256.</p>
+              <p class="text-[11px] text-slate-600 mt-0.5">Asigna las 34 aulas a las 674 sesiones de 2027A logrando <strong>93.6% de PTC en Edificios B/C</strong> y <strong>99.4% de estabilidad semanal</strong>, inyecta en Excel preservando <code class="font-mono">'Mapeo'</code> y <code class="font-mono">'PUERTAS'</code>, y publica el portal web protegido con SHA-256.</p>
             </div>
           </div>
         </div>
@@ -1318,12 +1318,12 @@
         </div>
         <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
           <div class="font-bold text-slate-900">Métricas Clave Auditadas (2026A)</div>
-          <div>• Tiempo total de ejecución: <strong>18.71 s</strong></div>
+          <div>• Tiempo total de ejecución: <strong>18.06 s</strong></div>
           <div>• Sobrecupos eliminados: <strong>41 → 0 (-100%)</strong></div>
-          <div>• Ahorro caminata docente: <strong>-18.3% (1,720 m)</strong></div>
-          <div>• Ahorro caminata alumnos: <strong>-12.4% (13,100 m)</strong></div>
-          <div>• PTC en Edificios B/C: <strong>82.5% (2026A) / 91.9% (2027A)</strong></div>
-          <div>• Estabilidad semanal: <strong>99.6% cursos fijos</strong></div>
+          <div>• Ahorro caminata docente: <strong>-9.8% (1,790 m)</strong></div>
+          <div>• Ahorro caminata alumnos: <strong>-17.7% (10,380 m)</strong></div>
+          <div>• PTC en Edificios B/C: <strong>80.3% (2026A) / 93.6% (2027A)</strong></div>
+          <div>• Estabilidad semanal: <strong>98.7% (2026A) / 99.4% (2027A)</strong></div>
         </div>
       </div>
       <div class="flex justify-end pt-2">
@@ -1350,19 +1350,19 @@
     // 1. CATÁLOGO REAL DE LAS 34 AULAS Y MATRIZ DE DISTANCIAS (NOTEBOOK)
     // -----------------------------------------------------------------------
     const AULAS_CATALOG = [
-      // Edificio B (11 Aulas Teóricas)
-      { id: 'A1', short: '1', edificio: 'B', piso: 1, cap: 48, tipo: 'Aula_Teorica' },
-      { id: 'A2', short: '2', edificio: 'B', piso: 1, cap: 48, tipo: 'Aula_Teorica' },
-      { id: 'A3', short: '3', edificio: 'B', piso: 1, cap: 48, tipo: 'Aula_Teorica' },
-      { id: 'A4', short: '4', edificio: 'B', piso: 1, cap: 48, tipo: 'Aula_Teorica' },
+      // Edificio B (11 Aulas Teóricas — todas en 2do Nivel según Croquis FE)
+      { id: 'A1', short: '1', edificio: 'B', piso: 2, cap: 48, tipo: 'Aula_Teorica' },
+      { id: 'A2', short: '2', edificio: 'B', piso: 2, cap: 48, tipo: 'Aula_Teorica' },
+      { id: 'A3', short: '3', edificio: 'B', piso: 2, cap: 48, tipo: 'Aula_Teorica' },
+      { id: 'A4', short: '4', edificio: 'B', piso: 2, cap: 48, tipo: 'Aula_Teorica' },
       { id: 'A5', short: '5', edificio: 'B', piso: 2, cap: 36, tipo: 'Aula_Teorica' },
       { id: 'A6', short: '6', edificio: 'B', piso: 2, cap: 36, tipo: 'Aula_Teorica' },
       { id: 'A7', short: '7', edificio: 'B', piso: 2, cap: 36, tipo: 'Aula_Teorica' },
       { id: 'A8', short: '8', edificio: 'B', piso: 2, cap: 36, tipo: 'Aula_Teorica' },
-      { id: 'A9', short: '9', edificio: 'B', piso: 3, cap: 36, tipo: 'Aula_Teorica' },
-      { id: 'A10', short: '10', edificio: 'B', piso: 3, cap: 36, tipo: 'Aula_Teorica' },
-      { id: 'A11', short: '11', edificio: 'B', piso: 3, cap: 36, tipo: 'Aula_Teorica' },
-      // Edificio C (7 Aulas Teóricas)
+      { id: 'A9', short: '9', edificio: 'B', piso: 2, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'A10', short: '10', edificio: 'B', piso: 2, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'A11', short: '11', edificio: 'B', piso: 2, cap: 36, tipo: 'Aula_Teorica' },
+      // Edificio C (7 Aulas Teóricas — Niveles 1 y 2)
       { id: 'A12', short: '12', edificio: 'C', piso: 1, cap: 36, tipo: 'Aula_Teorica' },
       { id: 'A13', short: '13', edificio: 'C', piso: 1, cap: 36, tipo: 'Aula_Teorica' },
       { id: 'A14', short: '14', edificio: 'C', piso: 2, cap: 36, tipo: 'Aula_Teorica' },
@@ -1370,21 +1370,21 @@
       { id: 'A16', short: '16', edificio: 'C', piso: 2, cap: 36, tipo: 'Aula_Teorica' },
       { id: 'AULA_LK', short: 'LK', edificio: 'C', piso: 2, cap: 35, tipo: 'Aula_Teorica' },
       { id: 'AULA_LC', short: 'LC', edificio: 'C', piso: 2, cap: 35, tipo: 'Aula_Teorica' },
-      // Edificio D (8 Aulas Teóricas)
-      { id: 'A17', short: '17', edificio: 'D', piso: 1, cap: 48, tipo: 'Aula_Teorica' },
-      { id: 'A18', short: '18', edificio: 'D', piso: 2, cap: 22, tipo: 'Aula_Teorica' },
-      { id: 'A19', short: '19', edificio: 'D', piso: 2, cap: 22, tipo: 'Aula_Teorica' },
-      { id: 'A20', short: '20', edificio: 'D', piso: 2, cap: 22, tipo: 'Aula_Teorica' },
-      { id: 'A21', short: '21', edificio: 'D', piso: 3, cap: 36, tipo: 'Aula_Teorica' },
-      { id: 'A22', short: '22', edificio: 'D', piso: 3, cap: 36, tipo: 'Aula_Teorica' },
+      // Edificio D (8 Aulas Teóricas — 3er y 4to Nivel)
+      { id: 'A17', short: '17', edificio: 'D', piso: 3, cap: 48, tipo: 'Aula_Teorica' },
+      { id: 'A18', short: '18', edificio: 'D', piso: 3, cap: 22, tipo: 'Aula_Teorica' },
+      { id: 'A19', short: '19', edificio: 'D', piso: 3, cap: 22, tipo: 'Aula_Teorica' },
+      { id: 'A20', short: '20', edificio: 'D', piso: 3, cap: 22, tipo: 'Aula_Teorica' },
+      { id: 'A21', short: '21', edificio: 'D', piso: 4, cap: 36, tipo: 'Aula_Teorica' },
+      { id: 'A22', short: '22', edificio: 'D', piso: 4, cap: 36, tipo: 'Aula_Teorica' },
       { id: 'A23', short: '23', edificio: 'D', piso: 4, cap: 36, tipo: 'Aula_Teorica' },
       { id: 'A24', short: '24', edificio: 'D', piso: 4, cap: 36, tipo: 'Aula_Teorica' },
-      // 8 Salas de Cómputo (Edificios C, D, E)
-      { id: 'SC_C', short: 'SC_C', edificio: 'C', piso: 2, cap: 40, tipo: 'Sala_Computo' },
-      { id: 'SC_D', short: 'SC_D', edificio: 'C', piso: 3, cap: 40, tipo: 'Sala_Computo' },
+      // 8 Salas de Cómputo (Edificios C N1, D N2, E N1-3)
+      { id: 'SC_C', short: 'SC_C', edificio: 'C', piso: 1, cap: 40, tipo: 'Sala_Computo' },
+      { id: 'SC_D', short: 'SC_D', edificio: 'C', piso: 1, cap: 40, tipo: 'Sala_Computo' },
       { id: 'SC_E', short: 'SC_E', edificio: 'D', piso: 2, cap: 25, tipo: 'Sala_Computo' },
-      { id: 'SC_F', short: 'SC_F', edificio: 'D', piso: 3, cap: 40, tipo: 'Sala_Computo' },
-      { id: 'SC_G', short: 'SC_G', edificio: 'D', piso: 4, cap: 45, tipo: 'Sala_Computo' },
+      { id: 'SC_F', short: 'SC_F', edificio: 'D', piso: 2, cap: 40, tipo: 'Sala_Computo' },
+      { id: 'SC_G', short: 'SC_G', edificio: 'D', piso: 2, cap: 45, tipo: 'Sala_Computo' },
       { id: 'SC_H', short: 'SC_H', edificio: 'E', piso: 1, cap: 35, tipo: 'Sala_Computo' },
       { id: 'SC_I', short: 'SC_I', edificio: 'E', piso: 2, cap: 35, tipo: 'Sala_Computo' },
       { id: 'SC_J', short: 'SC_J', edificio: 'E', piso: 3, cap: 25, tipo: 'Sala_Computo' }
@@ -1451,15 +1451,15 @@
       },
       7: {
         badge: 'PASO 7 DE 8 • CONVERGENCIA EVOLUTIVA Y AUDITORÍA 2026A',
-        tag: '150 Generaciones • 18.71 s',
+        tag: '150 Generaciones • 18.06 s',
         title: '7. Resultados Reales sobre la Planta 2026A: Asignación Manual vs. AG Memético',
-        subtitle: 'Reproduce las 150 generaciones reales del modelo y compara la eliminación de los 41 sobrecupos, el ahorro de caminata (-18.3%) y la prioridad PTC.'
+        subtitle: 'Reproduce las 150 generaciones reales del modelo y compara la eliminación de los 41 sobrecupos, el ahorro de caminata (-9.8% docente / -17.7% alumnos) y la prioridad PTC.'
       },
       8: {
         badge: 'PASO 8 DE 8 • AUTOMATIZACIÓN INTEGRAL 2027A (REGLA DE ORO)',
         tag: 'Fase 1 (Horarios) + Fase 2 (Aulas)',
         title: '8. Automatización en 1 Clic hacia 2027A: Captura sin Horarios y Daemon Watchdog',
-        subtitle: 'Simula cómo las jefaturas de carrera capturan únicamente Docente y Rango Horario dejando L, Ma, Mi, J, V, S vacías para que el sistema arme horarios y aulas en 25 segundos.'
+        subtitle: 'Simula cómo las jefaturas de carrera capturan únicamente Docente y Rango Horario dejando L, Ma, Mi, J, V, S vacías para que el sistema arme horarios y aulas en ~18 segundos.'
       }
     };
 
@@ -1554,7 +1554,7 @@
       });
 
       selOrig.value = 'A1';
-      selDest.value = 'SC_G';
+      selDest.value = 'A24';
       updateDistanceSim();
     }
 
@@ -1568,7 +1568,7 @@
       const id1 = document.getElementById('selectAulaOrigen').value;
       const id2 = document.getElementById('selectAulaDestino').value;
       const a1 = AULAS_CATALOG.find(x => x.id === id1) || AULAS_CATALOG[0];
-      const a2 = AULAS_CATALOG.find(x => x.id === id2) || AULAS_CATALOG[30];
+      const a2 = AULAS_CATALOG.find(x => x.id === id2) || AULAS_CATALOG[25];
 
       const dHoriz = DIST_EDIF[a1.edificio][a2.edificio];
       const diffPiso = Math.abs(a1.piso - a2.piso);
@@ -1976,12 +1976,12 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
             <div class="p-4 rounded-xl bg-emerald-950/90 border-2 border-emerald-400 space-y-1">
               <div class="font-bold text-uaemex-gold">✓ Sesión A: Macroeconomía (45 alumnos)</div>
-              <div class="font-mono text-sm text-white font-bold">Reubicada en Aula A1 (Edif B PB, Cap 48)</div>
-              <div class="text-[11px] text-emerald-200">Sobrecupo eliminado (3 butacas de holgura) y ubicada en Planta Baja.</div>
+              <div class="font-mono text-sm text-white font-bold">Reubicada en Aula A1 (Edif B 2do Nivel, Cap 48)</div>
+              <div class="text-[11px] text-emerald-200">Sobrecupo eliminado (3 butacas de holgura) y ubicada en el edificio preferente B.</div>
             </div>
             <div class="p-4 rounded-xl bg-emerald-950/90 border-2 border-emerald-400 space-y-1">
               <div class="font-bold text-sky-300">✓ Sesión B: Álgebra Superior NIB (20 alumnos)</div>
-              <div class="font-mono text-sm text-white font-bold">Reubicada en Aula A18 (Edif D Piso 2, Cap 22)</div>
+              <div class="font-mono text-sm text-white font-bold">Reubicada en Aula A18 (Edif D 3er Nivel, Cap 22)</div>
               <div class="text-[11px] text-emerald-200">Ajuste exacto de aforo (desperdicio S₃ reducido de 28 a 2 butacas).</div>
             </div>
           </div>
@@ -1994,10 +1994,10 @@
       const txt = document.getElementById('ptcSwapText');
       const btn = document.getElementById('btnTogglePtcSwap');
       if (ptcSwapResolved) {
-        txt.innerHTML = '✓ <strong>Swap Memético C Aplicado:</strong> <strong>Dr. Morales (PTC, 64 años)</strong> reubicado en <span class="font-mono font-bold text-emerald-800">Aula A2 (Edif B, Planta Baja, junto a cubículo)</span> y <strong>Mtro. Ruiz (29 años)</strong> en <span class="font-mono font-bold text-slate-800">Aula A24 (Edif D, Piso 4)</span>. Penalización S₅ reducida en -220 pts y S₆ reducida en -64 pts.';
+        txt.innerHTML = '✓ <strong>Swap Memético C Aplicado:</strong> <strong>Dr. Morales (PTC, 64 años)</strong> reubicado en <span class="font-mono font-bold text-emerald-800">Aula A2 (Edif B, 2do Nivel, junto a cubículo)</span> y <strong>Mtro. Ruiz (29 años)</strong> en <span class="font-mono font-bold text-slate-800">Aula A24 (Edif D, 4to Nivel)</span>. Penalización S₅ reducida en -220 pts y S₆ reducida en -64 pts.';
         btn.textContent = 'Revertir Estado Inicial';
       } else {
-        txt.innerHTML = 'Estado actual: <strong>Dr. Morales (PTC, 64 años)</strong> en <span class="font-mono font-bold text-rose-700">Aula A24 (Edif D, Piso 4)</span> y <strong>Mtro. Ruiz (Asignatura, 29 años)</strong> en <span class="font-mono font-bold text-emerald-800">Aula A2 (Edif B, Planta Baja)</span>.';
+        txt.innerHTML = 'Estado actual: <strong>Dr. Morales (PTC, 64 años)</strong> en <span class="font-mono font-bold text-rose-700">Aula A24 (Edif D, 4to Nivel)</span> y <strong>Mtro. Ruiz (Asignatura, 29 años)</strong> en <span class="font-mono font-bold text-emerald-800">Aula A2 (Edif B, 2do Nivel)</span>.';
         btn.textContent = 'Aplicar Swap PTC / Edad';
       }
     }
@@ -2047,8 +2047,8 @@
         formula: 'S₁(c) = Σ_{(i,j) ∈ P_doc} [ D_edif(edif(cᵢ), edif(cⱼ)) + 15.0 × |piso(cᵢ) - piso(cⱼ)| ]',
         desc: 'Minimiza los metros efectivos caminados (incluyendo escaleras a 15 m/piso) por profesores que imparten dos clases consecutivas sin descanso intermedio.',
         mechanism: 'Optimizada directamente por el Sub-operador Memético B (acerca la segunda clase al salón de la primera) y precalculada en matriz 34×34.',
-        manualVal: '2,105 metros / semana',
-        optVal: '1,720 metros / semana (-18.3%)'
+        manualVal: '1,985 metros / semana',
+        optVal: '1,790 metros / semana (-9.8%)'
       },
       {
         code: 'S₂',
@@ -2058,8 +2058,8 @@
         formula: 'S₂(c) = Σ_{(i,j) ∈ P_grupo} d_efectiva(cᵢ, cⱼ)',
         desc: 'Minimiza el flujo y desplazamiento colectivo de los grupos estudiantiles por pasillos y escalinatas en cambios de hora consecutivos.',
         mechanism: 'Evaluada vectorialmente sobre los pares consecutivos de cada grupo escolar para reducir congestión en horas pico (09:00, 11:00, 13:00).',
-        manualVal: '14,955 metros / semana',
-        optVal: '13,100 metros / semana (-1,855 m, -12.4%)'
+        manualVal: '12,615 metros / semana',
+        optVal: '10,380 metros / semana (-2,235 m, -17.7%)'
       },
       {
         code: 'S₃',
@@ -2069,8 +2069,8 @@
         formula: 'S₃(c) = Σ_{i=1..N} max(0, capacidad(cᵢ) - inscritosᵢ)',
         desc: 'Evita asignar salones de gran capacidad (48 plazas: A1–A4, A17) a grupos pequeños cuando un grupo numeroso los necesita.',
         mechanism: 'Peso ligero subordinado al confort que guía a los Augmenting Swaps para reservar aulas grandes a grupos de 37–48 estudiantes.',
-        manualVal: 'Alta dispersión con 41 sobrecupos',
-        optVal: 'Ajuste óptimo sin sobrecupos'
+        manualVal: '8,531 butacas ociosas (con 41 sobrecupos)',
+        optVal: '8,504 butacas ociosas (0 sobrecupos)'
       },
       {
         code: 'S₄',
@@ -2081,7 +2081,7 @@
         desc: 'Penaliza el fenómeno de Building Hopping: que un mismo grupo estudiantil tenga que mudar de edificio (ej. de B a D y luego a C) el mismo día.',
         mechanism: 'Compacta la jornada diaria de cada grupo dentro del mismo edificio siempre que la demanda de salas de cómputo lo permita.',
         manualVal: '252 transiciones de edificio',
-        optVal: '215 transiciones (-37 saltos, -14.7%)'
+        optVal: '216 transiciones (-36 saltos, -14.3%)'
       },
       {
         code: 'S₅',
@@ -2092,7 +2092,7 @@
         desc: 'Prioridad institucional máxima entre restricciones blandas: ubicar a los Profesores de Tiempo Completo (PTC) en los Edificios B o C, contiguos a sus cubículos.',
         mechanism: 'Tasa marginal W_S5/W_S1 = 48.9 m y Sub-operador Memético C que intercambia PTCs en D/E con profesores de asignatura en B/C.',
         manualVal: '48 fuera de B/C (73.8% en B/C)',
-        optVal: '32 fuera de B/C (82.5% en 2026A / 91.9% en 2027A)'
+        optVal: '36 fuera de B/C (80.3% en 2026A / 93.6% en 2027A)'
       },
       {
         code: 'S₆',
@@ -2101,9 +2101,9 @@
         weight: 'W_S6 = 25.0 (AHP ω₆ = 0.048)',
         formula: 'S₆(c) = Σ_{i=1..N} (edadᵢ / 50.0) · rango_edificio(cᵢ),  rango(B)=0, C=1, D=2, E=3',
         desc: 'Criterio de salud ocupacional y protección articular: asigna a los docentes de mayor edad a los Edificios B y C y pisos bajos, y a los más jóvenes a la torre D.',
-        mechanism: 'Sub-operador Memético C ponderado por edad extraída del RFC; logra medianas de 53.3 años en Edif B vs 46.9 años en Edif D.',
-        manualVal: 'Costo etario: 642.3 pts',
-        optVal: 'Costo etario: 626.6 pts (Jerarquía B→C→D→E)'
+        mechanism: 'Sub-operador Memético C ponderado por edad extraída del RFC; logra medianas de 53.0 años en Edif B vs 44.0 años en Edif D (promedios 53.6 vs 47.0).',
+        manualVal: 'Costo etario: 632.7 pts',
+        optVal: 'Costo etario: 622.1 pts (Jerarquía B→C→D→E)'
       },
       {
         code: 'S₇',
@@ -2114,7 +2114,7 @@
         desc: 'Evita que una misma materia cambie de aula entre lunes, miércoles y viernes, brindando certidumbre espacial a docentes y alumnos.',
         mechanism: 'Preservada constructivamente por el operador Course-Uniform Crossover (60%) y reparada por el Sub-operador Memético A.',
         manualVal: '12 cambios semanales',
-        optVal: '99.6% de cursos con salón fijo toda la semana'
+        optVal: '9 cambios (98.7% sesiones estables en 2026A / 99.4% en 2027A)'
       }
     ];
 
@@ -2225,7 +2225,7 @@
             <div class="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-500/50 flex flex-col justify-between">
               <div class="text-[10px] font-bold uppercase text-emerald-300">AG Memético Optimizado</div>
               <div class="text-sm font-extrabold font-mono text-uaemex-gold my-1">${active.optVal}</div>
-              <div class="text-[10px] text-emerald-200">Convergencia en 18.71 s</div>
+              <div class="text-[10px] text-emerald-200">Convergencia en 18.06 s</div>
             </div>
           </div>
         </div>
@@ -2237,21 +2237,21 @@
         document.getElementById('sliderH1').value = 0;
         document.getElementById('sliderH2').value = 41;
         document.getElementById('sliderH3').value = 2;
-        document.getElementById('sliderS1').value = 2105;
-        document.getElementById('sliderS2').value = 14955;
-        document.getElementById('sliderS3').value = 6850;
+        document.getElementById('sliderS1').value = 1985;
+        document.getElementById('sliderS2').value = 12615;
+        document.getElementById('sliderS3').value = 8531;
         document.getElementById('sliderS4').value = 252;
         document.getElementById('sliderS5').value = 48;
-        document.getElementById('sliderS6').value = 642.3;
+        document.getElementById('sliderS6').value = 632.7;
         document.getElementById('sliderS7').value = 12;
       } else if (preset === 'gen0') {
         document.getElementById('sliderH1').value = 0;
         document.getElementById('sliderH2').value = 0;
         document.getElementById('sliderH3').value = 0;
-        document.getElementById('sliderS1').value = 3450;
-        document.getElementById('sliderS2').value = 15800;
-        document.getElementById('sliderS3').value = 6500;
-        document.getElementById('sliderS4').value = 248;
+        document.getElementById('sliderS1').value = 3375;
+        document.getElementById('sliderS2').value = 13370;
+        document.getElementById('sliderS3').value = 8246;
+        document.getElementById('sliderS4').value = 262;
         document.getElementById('sliderS5').value = 49;
         document.getElementById('sliderS6').value = 642.3;
         document.getElementById('sliderS7').value = 37;
@@ -2259,13 +2259,13 @@
         document.getElementById('sliderH1').value = 0;
         document.getElementById('sliderH2').value = 0;
         document.getElementById('sliderH3').value = 0;
-        document.getElementById('sliderS1').value = 1720;
-        document.getElementById('sliderS2').value = 13100;
-        document.getElementById('sliderS3').value = 6200;
-        document.getElementById('sliderS4').value = 215;
-        document.getElementById('sliderS5').value = 32;
-        document.getElementById('sliderS6').value = 626.6;
-        document.getElementById('sliderS7').value = 14;
+        document.getElementById('sliderS1').value = 1790;
+        document.getElementById('sliderS2').value = 10380;
+        document.getElementById('sliderS3').value = 8504;
+        document.getElementById('sliderS4').value = 216;
+        document.getElementById('sliderS5').value = 36;
+        document.getElementById('sliderS6').value = 622.1;
+        document.getElementById('sliderS7').value = 9;
       }
       updateFitnessCalc();
     }
@@ -2311,17 +2311,17 @@
     // 9. PASO 7: EVOLUCIÓN EN VIVO (150 GENERACIONES REALES Y GRÁFICAS)
     // -----------------------------------------------------------------------
     const EVO_HISTORY = [
-      { gen: 0, fit: 0.010162, meanFit: 0.009410, s1: 3450, s2: 15820, s5: 49, s6: 642.3, s7: 37, t: 0.12 },
-      { gen: 15, fit: 0.011038, meanFit: 0.010320, s1: 2640, s2: 14790, s5: 45, s6: 632.3, s7: 31, t: 1.98 },
-      { gen: 30, fit: 0.011688, meanFit: 0.011105, s1: 2420, s2: 14210, s5: 40, s6: 620.5, s7: 21, t: 3.85 },
-      { gen: 45, fit: 0.012105, meanFit: 0.011640, s1: 2155, s2: 13840, s5: 36, s6: 626.6, s7: 18, t: 5.72 },
-      { gen: 60, fit: 0.012453, meanFit: 0.012080, s1: 2025, s2: 13590, s5: 34, s6: 629.3, s7: 14, t: 7.58 },
-      { gen: 75, fit: 0.012657, meanFit: 0.012350, s1: 1825, s2: 13380, s5: 32, s6: 629.2, s7: 14, t: 9.45 },
-      { gen: 90, fit: 0.012682, meanFit: 0.012460, s1: 1825, s2: 13310, s5: 32, s6: 629.2, s7: 14, t: 11.30 },
-      { gen: 105, fit: 0.012859, meanFit: 0.012610, s1: 1810, s2: 13240, s5: 32, s6: 633.7, s7: 15, t: 13.18 },
-      { gen: 120, fit: 0.013085, meanFit: 0.012840, s1: 1810, s2: 13170, s5: 32, s6: 627.5, s7: 14, t: 15.04 },
-      { gen: 135, fit: 0.013180, meanFit: 0.012990, s1: 1720, s2: 13120, s5: 32, s6: 626.6, s7: 14, t: 16.90 },
-      { gen: 149, fit: 0.013318, meanFit: 0.013150, s1: 1720, s2: 13100, s5: 32, s6: 626.6, s7: 14, t: 18.71 }
+      { gen: 0, fit: 0.010741, meanFit: 0.009876, s1: 3375, s2: 13370, s5: 49, s6: 642.3, s7: 37, t: 0.12 },
+      { gen: 15, fit: 0.011904, meanFit: 0.011556, s1: 2470, s2: 12150, s5: 46, s6: 627.1, s7: 35, t: 1.92 },
+      { gen: 30, fit: 0.012832, meanFit: 0.012676, s1: 2035, s2: 11705, s5: 44, s6: 620.3, s7: 23, t: 3.71 },
+      { gen: 45, fit: 0.013343, meanFit: 0.013200, s1: 1875, s2: 11405, s5: 42, s6: 625.9, s7: 18, t: 5.51 },
+      { gen: 60, fit: 0.013832, meanFit: 0.013731, s1: 1850, s2: 10985, s5: 40, s6: 625.8, s7: 13, t: 7.30 },
+      { gen: 75, fit: 0.014223, meanFit: 0.014069, s1: 1875, s2: 10955, s5: 36, s6: 617.2, s7: 8, t: 9.10 },
+      { gen: 90, fit: 0.014259, meanFit: 0.014259, s1: 1755, s2: 11030, s5: 36, s6: 620.1, s7: 8, t: 10.89 },
+      { gen: 105, fit: 0.014309, meanFit: 0.014298, s1: 1755, s2: 10930, s5: 36, s6: 623.1, s7: 8, t: 12.68 },
+      { gen: 120, fit: 0.014337, meanFit: 0.014332, s1: 1755, s2: 10925, s5: 36, s6: 622.2, s7: 8, t: 14.47 },
+      { gen: 135, fit: 0.014449, meanFit: 0.014362, s1: 1835, s2: 10570, s5: 36, s6: 625.9, s7: 8, t: 16.27 },
+      { gen: 149, fit: 0.014597, meanFit: 0.014464, s1: 1790, s2: 10380, s5: 36, s6: 622.1, s7: 9, t: 18.06 }
     ];
 
     let chartFitnessInst = null;
@@ -2338,9 +2338,9 @@
       document.getElementById('evoTimeLabel').textContent = `Tiempo de cómputo acumulado: ${row.t.toFixed(2)} s`;
       document.getElementById('teleFit').textContent = row.fit.toFixed(6);
       document.getElementById('teleS1').textContent = row.s1.toLocaleString() + ' m';
-      const diffManual = row.s1 - 2105;
+      const diffManual = row.s1 - 1985;
       document.getElementById('teleS1Sub').textContent =
-        diffManual <= 0 ? `${diffManual} m vs Manual (${((diffManual / 2105) * 100).toFixed(1)}%)` : `+${diffManual} m vs Manual`;
+        diffManual <= 0 ? `${diffManual} m vs Manual (${((diffManual / 1985) * 100).toFixed(1)}%)` : `+${diffManual} m vs Manual`;
       document.getElementById('teleS5').textContent = row.s5 + ' ses';
       const ptcPct = ((183 - row.s5) / 183 * 100).toFixed(1);
       document.getElementById('teleS5Sub').textContent = `${ptcPct}% en B/C (${183 - row.s5}/183)`;
@@ -2430,7 +2430,7 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } },
-            scales: { y: { min: 0.009, max: 0.014 } }
+            scales: { y: { min: 0.009, max: 0.015 } }
           }
         });
 
@@ -2450,8 +2450,8 @@
                 tension: 0.25
               },
               {
-                label: 'Manual Original (2,105 m)',
-                data: slice.map(() => 2105),
+                label: 'Manual Original (1,985 m)',
+                data: slice.map(() => 1985),
                 borderColor: '#e11d48',
                 borderDash: [4, 4],
                 borderWidth: 1.8,
@@ -2476,7 +2476,7 @@
             datasets: [
               {
                 label: 'Edad Mediana Docente (Años)',
-                data: [53.3, 50.1, 46.9, 48.1],
+                data: [53.0, 49.0, 44.0, 48.0],
                 backgroundColor: ['#1b4d3e', '#2e7d5e', '#74a88e', '#c59b27'],
                 borderRadius: 6
               }
@@ -2506,7 +2506,7 @@
 
       chartS1Inst.data.labels = labels;
       chartS1Inst.data.datasets[0].data = slice.map(x => x.s1);
-      chartS1Inst.data.datasets[1].data = slice.map(() => 2105);
+      chartS1Inst.data.datasets[1].data = slice.map(() => 1985);
       chartS1Inst.update();
     }
 
@@ -2538,8 +2538,8 @@
         <div class="text-amber-300">[Watchdog Daemon] ¡Cambio detectado por firma de tiempo en Plantilla_Entrada_Planta_2027A.xlsx!</div>
         <div>&gt; [FASE 1: Motor Constructivo] Filtrando 379 materias de semestres pares (2, 4, 6, 8, 10)...</div>
         <div>&gt; [FASE 1] Sintetizando bloques dentro de RANGO_DOCENTE_LV (${rango}) para "${materia}" → H_doc = 0, H_grupo = 0.</div>
-        <div>&gt; [FASE 2: AG Memético Vectorizado] Asignando 34 aulas a 685 sesiones presenciales (Docente=${docenteVal})...</div>
-        <div class="text-white font-bold">&gt; ✓ Optimización 2027A completada en 23.4 s | 91.9% PTC en Edif B/C | 98.5% estabilidad semanal | Hash SHA-256 Portal: ${fakeHash}...</div>
+        <div>&gt; [FASE 2: AG Memético Vectorizado] Asignando 34 aulas a 674 sesiones presenciales (Docente=${docenteVal})...</div>
+        <div class="text-white font-bold">&gt; ✓ Optimización 2027A completada en 18.40 s | 93.6% PTC en Edif B/C (161/172) | 99.4% estabilidad semanal | Hash SHA-256 Portal: ${fakeHash}...</div>
       `;
     }
 
@@ -2566,11 +2566,11 @@
         }
 
         if (cupoKey === '34_Computo') {
-          aulaAsignada = docenteKey.startsWith('PTC') ? 'SC_C (Edif C P2)' : 'SC_H (Edif E P1)';
+          aulaAsignada = docenteKey.startsWith('PTC') ? 'SC_C (Edif C 1er Niv)' : 'SC_H (Edif E 1er Niv)';
         } else if (cupoKey === '44_Teorica') {
-          aulaAsignada = docenteKey === 'PTC_61' ? 'A1 (Edif B PB)' : 'A17 (Edif D PB)';
+          aulaAsignada = docenteKey === 'PTC_61' ? 'A1 (Edif B 2do Niv)' : 'A17 (Edif D 3er Niv)';
         } else {
-          aulaAsignada = docenteKey.startsWith('PTC') ? 'A6 (Edif B P2)' : 'A21 (Edif D P3)';
+          aulaAsignada = docenteKey.startsWith('PTC') ? 'A6 (Edif B 2do Niv)' : 'A21 (Edif D 4to Niv)';
         }
       }
 
@@ -2597,7 +2597,7 @@
           <td class="p-2 text-center">${is2027Optimized ? '07:00-09:00' : emptyBadge}</td>
           <td class="p-2 text-center">${emptyBadge}</td>
           <td class="p-2 text-center">${is2027Optimized ? '07:00-09:00' : emptyBadge}</td>
-          <td class="p-2 text-center font-bold ${is2027Optimized ? 'text-emerald-800' : 'text-slate-400'}">${is2027Optimized ? 'A12 (Edif C PB)' : 'PENDIENTE'}</td>
+          <td class="p-2 text-center font-bold ${is2027Optimized ? 'text-emerald-800' : 'text-slate-400'}">${is2027Optimized ? 'A12 (Edif C 1er Niv)' : 'PENDIENTE'}</td>
         </tr>
       `;
     }
