@@ -96,6 +96,9 @@
           <span id="tourIcon">▶</span>
           <span id="tourLabel">Recorrido Guiado</span>
         </button>
+        <button onclick="goToStep(6)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-700/80 hover:bg-emerald-600 text-white border border-emerald-400/40 transition">
+          Restricciones H₁-H₃ / S₁-S₇
+        </button>
         <button onclick="openModalResumen()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition">
           Ficha Técnica
         </button>
@@ -128,7 +131,7 @@
           </button>
           <button onclick="goToStep(6)" id="navStep6" class="step-nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-emerald-100 hover:bg-white/10 transition flex items-center gap-1.5">
             <span class="w-5 h-5 rounded-full bg-black/25 flex items-center justify-center font-mono text-[11px]">6</span>
-            <span>Fitness y Pesos AHP</span>
+            <span>Restricciones H/S y Fitness</span>
           </button>
           <button onclick="goToStep(7)" id="navStep7" class="step-nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-emerald-100 hover:bg-white/10 transition flex items-center gap-1.5">
             <span class="w-5 h-5 rounded-full bg-black/25 flex items-center justify-center font-mono text-[11px]">7</span>
@@ -745,16 +748,51 @@
     </section>
 
     <!-- =================================================================== -->
-    <!-- PASO 6: FUNCIÓN OBJETIVO, MATRIZ AHP DE SAATY Y CALCULADORA FITNESS -->
+    <!-- PASO 6: RESTRICCIONES DURAS/BLANDAS, MATRIZ AHP Y FITNESS           -->
     <!-- =================================================================== -->
     <section id="stepView6" class="step-section hidden space-y-6">
+      <!-- Catálogo Interactivo de las 3 Restricciones Duras (H1-H3) y 7 Blandas (S1-S7) -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800">3 Restricciones Duras (H₁–H₃)</span>
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">7 Restricciones Blandas (S₁–S₇)</span>
+            </div>
+            <h3 class="text-base sm:text-lg font-extrabold text-slate-900 mt-1">
+              Catálogo Interactivo de Restricciones Duras y Blandas del Modelo UCTP
+            </h3>
+            <p class="text-xs text-slate-500">
+              Haz clic en cualquier restricción para inspeccionar su formulación matemática exacta, su peso de penalización, el operador algorítmico que la resuelve y el resultado obtenido en la auditoría 2026A.
+            </p>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button id="btnFilterAll" onclick="filterConstraints('all')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-uaemex-green text-white transition">
+              Todas (10)
+            </button>
+            <button id="btnFilterHard" onclick="filterConstraints('hard')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-rose-800 hover:bg-rose-50 transition">
+              Duras H₁–H₃ (3)
+            </button>
+            <button id="btnFilterSoft" onclick="filterConstraints('soft')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-emerald-800 hover:bg-emerald-50 transition">
+              Blandas S₁–S₇ (7)
+            </button>
+          </div>
+        </div>
+
+        <!-- Grid de Tarjetas de las 10 Restricciones -->
+        <div id="constraintsCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5"></div>
+
+        <!-- Panel Detallado de la Restricción Seleccionada -->
+        <div id="constraintDetailBox" class="bg-slate-900 text-white rounded-2xl p-4 sm:p-5 border border-slate-800"></div>
+      </div>
+
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Calculadora Interactiva de Fitness y Factor 0.001 -->
+        <!-- Calculadora Interactiva de Fitness con las 10 Restricciones y Factor 0.001 -->
         <div class="lg:col-span-6 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
             <div>
               <h3 class="text-base font-bold text-slate-900">Calculadora Interactiva de la Función de Aptitud (Fitness)</h3>
-              <p class="text-xs text-slate-500">Experimenta con las restricciones duras (H₁-H₃), blandas (S₁-S₇) y el factor de escala γ = 0.001.</p>
+              <p class="text-xs text-slate-500">Ajusta las 3 restricciones duras (H₁-H₃), las 7 blandas (S₁-S₇) y el factor de escala γ = 0.001.</p>
             </div>
             <div class="flex gap-1.5">
               <button onclick="loadFitnessPreset('manual')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100">
@@ -775,53 +813,87 @@
             <div id="fitnessLiveFormula" class="text-[11px] text-emerald-300">1 / (1.0 + 0 + 0.001 × 74,086.5) = 0.013318</div>
           </div>
 
-          <!-- Sliders de Restricciones -->
+          <!-- Sliders de Restricciones Duras (H1, H2, H3) y Blandas (S1..S7) -->
           <div class="space-y-2.5 text-xs">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl bg-rose-50/60 border border-rose-200">
-              <div>
-                <div class="flex justify-between font-bold text-rose-900">
-                  <label for="sliderH1">H₁ Colisiones (×10,000):</label>
-                  <span id="valH1" class="font-mono">0</span>
+            <div class="p-3 rounded-xl bg-rose-50/70 border border-rose-200 space-y-2">
+              <div class="font-extrabold text-rose-900 uppercase text-[10px] tracking-wider">Restricciones Duras (Inadmisibles si &gt; 0): P_dura = 10,000·H₁ + 5,000·H₂ + 5,000·H₃</div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <div class="flex justify-between font-bold text-rose-900">
+                    <label for="sliderH1">H₁ Colisiones:</label>
+                    <span id="valH1" class="font-mono">0</span>
+                  </div>
+                  <input id="sliderH1" type="range" min="0" max="10" value="0" oninput="updateFitnessCalc()" class="w-full accent-rose-600 cursor-pointer" />
                 </div>
-                <input id="sliderH1" type="range" min="0" max="10" value="0" oninput="updateFitnessCalc()" class="w-full accent-rose-600 cursor-pointer" />
-              </div>
-              <div>
-                <div class="flex justify-between font-bold text-rose-900">
-                  <label for="sliderH2">H₂ Sobrecupos (×5,000):</label>
-                  <span id="valH2" class="font-mono">0</span>
+                <div>
+                  <div class="flex justify-between font-bold text-rose-900">
+                    <label for="sliderH2">H₂ Sobrecupos:</label>
+                    <span id="valH2" class="font-mono">0</span>
+                  </div>
+                  <input id="sliderH2" type="range" min="0" max="45" value="0" oninput="updateFitnessCalc()" class="w-full accent-rose-600 cursor-pointer" />
                 </div>
-                <input id="sliderH2" type="range" min="0" max="45" value="0" oninput="updateFitnessCalc()" class="w-full accent-rose-600 cursor-pointer" />
+                <div>
+                  <div class="flex justify-between font-bold text-rose-900">
+                    <label for="sliderH3">H₃ Tipo Aula:</label>
+                    <span id="valH3" class="font-mono">0</span>
+                  </div>
+                  <input id="sliderH3" type="range" min="0" max="10" value="0" oninput="updateFitnessCalc()" class="w-full accent-rose-600 cursor-pointer" />
+                </div>
               </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200">
-              <div>
-                <div class="flex justify-between font-semibold text-slate-700">
-                  <label for="sliderS1">S₁ Caminata Docente (×4.5):</label>
-                  <span id="valS1" class="font-mono text-uaemex-green">1,720 m</span>
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="font-extrabold text-uaemex-green uppercase text-[10px] tracking-wider">Restricciones Blandas (Ergonomía y Calidad Institucional): S₁ a S₇</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div>
+                  <div class="flex justify-between font-semibold text-slate-700">
+                    <label for="sliderS1">S₁ Dist. Docente (×4.5):</label>
+                    <span id="valS1" class="font-mono text-uaemex-green">1,720 m</span>
+                  </div>
+                  <input id="sliderS1" type="range" min="1200" max="4000" step="15" value="1720" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
                 </div>
-                <input id="sliderS1" type="range" min="1200" max="4000" step="15" value="1720" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
-              </div>
-              <div>
-                <div class="flex justify-between font-semibold text-slate-700">
-                  <label for="sliderS2">S₂ Caminata Alumnos (×2.5):</label>
-                  <span id="valS2" class="font-mono text-uaemex-green">13,100 m</span>
+                <div>
+                  <div class="flex justify-between font-semibold text-slate-700">
+                    <label for="sliderS2">S₂ Dist. Alumnos (×2.5):</label>
+                    <span id="valS2" class="font-mono text-uaemex-green">13,100 m</span>
+                  </div>
+                  <input id="sliderS2" type="range" min="10000" max="18000" step="50" value="13100" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
                 </div>
-                <input id="sliderS2" type="range" min="10000" max="18000" step="50" value="13100" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
-              </div>
-              <div>
-                <div class="flex justify-between font-semibold text-slate-700">
-                  <label for="sliderS5">S₅ PTC fuera B/C (×220.0):</label>
-                  <span id="valS5" class="font-mono text-uaemex-green">32 ses</span>
+                <div>
+                  <div class="flex justify-between font-semibold text-slate-700">
+                    <label for="sliderS3">S₃ Butacas Vacías (×0.1):</label>
+                    <span id="valS3" class="font-mono text-uaemex-green">6,200 but</span>
+                  </div>
+                  <input id="sliderS3" type="range" min="3000" max="15000" step="100" value="6200" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
                 </div>
-                <input id="sliderS5" type="range" min="0" max="80" value="32" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
-              </div>
-              <div>
-                <div class="flex justify-between font-semibold text-slate-700">
-                  <label for="sliderS7">S₇ Cambio Salón Sem. (×180.0):</label>
-                  <span id="valS7" class="font-mono text-uaemex-green">14 cambios</span>
+                <div>
+                  <div class="flex justify-between font-semibold text-slate-700">
+                    <label for="sliderS4">S₄ Saltos Edificio (×35.0):</label>
+                    <span id="valS4" class="font-mono text-uaemex-green">215 saltos</span>
+                  </div>
+                  <input id="sliderS4" type="range" min="150" max="320" step="1" value="215" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
                 </div>
-                <input id="sliderS7" type="range" min="0" max="60" value="14" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
+                <div>
+                  <div class="flex justify-between font-semibold text-slate-700">
+                    <label for="sliderS5">S₅ PTC fuera B/C (×220.0):</label>
+                    <span id="valS5" class="font-mono text-uaemex-green">32 ses</span>
+                  </div>
+                  <input id="sliderS5" type="range" min="0" max="80" value="32" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
+                </div>
+                <div>
+                  <div class="flex justify-between font-semibold text-slate-700">
+                    <label for="sliderS6">S₆ Costo Edad (×25.0):</label>
+                    <span id="valS6" class="font-mono text-uaemex-green">626.6 pts</span>
+                  </div>
+                  <input id="sliderS6" type="range" min="550" max="720" step="0.5" value="626.6" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
+                </div>
+                <div class="sm:col-span-2">
+                  <div class="flex justify-between font-semibold text-slate-700">
+                    <label for="sliderS7">S₇ Cambio Salón Semanal intra-Curso (×180.0):</label>
+                    <span id="valS7" class="font-mono text-uaemex-green">14 cambios</span>
+                  </div>
+                  <input id="sliderS7" type="range" min="0" max="60" value="14" oninput="updateFitnessCalc()" class="w-full accent-uaemex-green cursor-pointer" />
+                </div>
               </div>
             </div>
 
@@ -1931,29 +2003,268 @@
     }
 
     // -----------------------------------------------------------------------
-    // 8. PASO 6: CALCULADORA INTERACTIVA DE FITNESS Y FACTOR 0.001
+    // 8. PASO 6: CATÁLOGO DE RESTRICCIONES (H1-H3 / S1-S7) Y CALCULADORA FITNESS
     // -----------------------------------------------------------------------
+    const CONSTRAINTS_CATALOG = [
+      {
+        code: 'H₁',
+        type: 'hard',
+        name: 'Cero Colisiones de Aula Física',
+        weight: 'W_H1 = 10,000 pts / colisión',
+        formula: 'H₁(c) = Σ_{1 ≤ i < j ≤ N} I(cᵢ = cⱼ ∧ díaᵢ = díaⱼ ∧ max(iniᵢ, iniⱼ) < min(finᵢ, finⱼ))',
+        desc: 'Mandato físico estricto: ningún salón puede albergar dos sesiones presenciales simultáneas en el mismo día y bloque horario.',
+        mechanism: 'Evaluada en < 20 ms mediante Broadcasting Tensorial 3D en NumPy y preservada libre de choques con Day-Block Crossover y Augmenting Swaps.',
+        manualVal: '0 colisiones',
+        optVal: '0 colisiones (100% factible)'
+      },
+      {
+        code: 'H₂',
+        type: 'hard',
+        name: 'Capacidad Estricta (Cero Sobrecupos)',
+        weight: 'W_H2 = 5,000 pts / sobrecupo',
+        formula: 'H₂(c) = Σ_{i=1..N} I(capacidad(cᵢ) < inscritosᵢ)  ≡  0 (por Invariante Aᵢ)',
+        desc: 'El cupo máximo de bancas del aula asignada debe ser mayor o igual al número de estudiantes inscritos en la Unidad de Aprendizaje.',
+        mechanism: 'Garantizada constructivamente al 100% mediante el Invariante de Dominios Admisibles Aᵢ: ningún gen puede tomar un aula con capacidad menor a inscritosᵢ.',
+        manualVal: '41 sesiones con sobrecupo',
+        optVal: '0 sesiones (-100% eliminadas)'
+      },
+      {
+        code: 'H₃',
+        type: 'hard',
+        name: 'Compatibilidad Estricta de Tipo de Aula',
+        weight: 'W_H3 = 5,000 pts / error tipo',
+        formula: 'H₃(c) = Σ_{i=1..N} I(tipo_espacio(cᵢ) ≠ tipo_requeridoᵢ)  ≡  0 (por Invariante Aᵢ)',
+        desc: 'Las asignaturas teóricas deben impartirse en una de las 26 Aulas Teóricas y las materias prácticas de software en una de las 8 Salas de Cómputo.',
+        mechanism: 'Garantizada por construcción en el filtro tipológico del Dominio Admisible Aᵢ antes de iniciar la evolución.',
+        manualVal: '2 clases en salón erróneo',
+        optVal: '0 clases erróneas (100% compatible)'
+      },
+      {
+        code: 'S₁',
+        type: 'soft',
+        name: 'Distancia Peatonal Docente Consecutiva',
+        weight: 'W_S1 = 4.5 (AHP ω₁ = 0.126)',
+        formula: 'S₁(c) = Σ_{(i,j) ∈ P_doc} [ D_edif(edif(cᵢ), edif(cⱼ)) + 15.0 × |piso(cᵢ) - piso(cⱼ)| ]',
+        desc: 'Minimiza los metros efectivos caminados (incluyendo escaleras a 15 m/piso) por profesores que imparten dos clases consecutivas sin descanso intermedio.',
+        mechanism: 'Optimizada directamente por el Sub-operador Memético B (acerca la segunda clase al salón de la primera) y precalculada en matriz 34×34.',
+        manualVal: '2,105 metros / semana',
+        optVal: '1,720 metros / semana (-18.3%)'
+      },
+      {
+        code: 'S₂',
+        type: 'soft',
+        name: 'Distancia Peatonal Estudiantil Consecutiva',
+        weight: 'W_S2 = 2.5 (AHP ω₂ = 0.076)',
+        formula: 'S₂(c) = Σ_{(i,j) ∈ P_grupo} d_efectiva(cᵢ, cⱼ)',
+        desc: 'Minimiza el flujo y desplazamiento colectivo de los grupos estudiantiles por pasillos y escalinatas en cambios de hora consecutivos.',
+        mechanism: 'Evaluada vectorialmente sobre los pares consecutivos de cada grupo escolar para reducir congestión en horas pico (09:00, 11:00, 13:00).',
+        manualVal: '14,955 metros / semana',
+        optVal: '13,100 metros / semana (-1,855 m, -12.4%)'
+      },
+      {
+        code: 'S₃',
+        type: 'soft',
+        name: 'Subutilización / Desperdicio de Butacas',
+        weight: 'W_S3 = 0.1 (AHP ω₃ = 0.021)',
+        formula: 'S₃(c) = Σ_{i=1..N} max(0, capacidad(cᵢ) - inscritosᵢ)',
+        desc: 'Evita asignar salones de gran capacidad (48 plazas: A1–A4, A17) a grupos pequeños cuando un grupo numeroso los necesita.',
+        mechanism: 'Peso ligero subordinado al confort que guía a los Augmenting Swaps para reservar aulas grandes a grupos de 37–48 estudiantes.',
+        manualVal: 'Alta dispersión con 41 sobrecupos',
+        optVal: 'Ajuste óptimo sin sobrecupos'
+      },
+      {
+        code: 'S₄',
+        type: 'soft',
+        name: 'Cambios de Edificio por Grupo en el Día',
+        weight: 'W_S4 = 35.0 (AHP ω₄ = 0.048)',
+        formula: 'S₄(c) = Σ_{(i,j) ∈ P_grupo_día} I(edificio(cᵢ) ≠ edificio(cⱼ))',
+        desc: 'Penaliza el fenómeno de Building Hopping: que un mismo grupo estudiantil tenga que mudar de edificio (ej. de B a D y luego a C) el mismo día.',
+        mechanism: 'Compacta la jornada diaria de cada grupo dentro del mismo edificio siempre que la demanda de salas de cómputo lo permita.',
+        manualVal: '252 transiciones de edificio',
+        optVal: '215 transiciones (-37 saltos, -14.7%)'
+      },
+      {
+        code: 'S₅',
+        type: 'soft',
+        name: 'Prioridad de PTC en Edificios B y C',
+        weight: 'W_S5 = 220.0 (AHP ω₅ = 0.370 • #1 Blanda)',
+        formula: 'S₅(c) = Σ_{i ∈ E_PTC} I(edificio(cᵢ) ∉ {B, C})',
+        desc: 'Prioridad institucional máxima entre restricciones blandas: ubicar a los Profesores de Tiempo Completo (PTC) en los Edificios B o C, contiguos a sus cubículos.',
+        mechanism: 'Tasa marginal W_S5/W_S1 = 48.9 m y Sub-operador Memético C que intercambia PTCs en D/E con profesores de asignatura en B/C.',
+        manualVal: '48 fuera de B/C (73.8% en B/C)',
+        optVal: '32 fuera de B/C (82.5% en 2026A / 91.9% en 2027A)'
+      },
+      {
+        code: 'S₆',
+        type: 'soft',
+        name: 'Jerarquía Etaria Docente por Edificio',
+        weight: 'W_S6 = 25.0 (AHP ω₆ = 0.048)',
+        formula: 'S₆(c) = Σ_{i=1..N} (edadᵢ / 50.0) · rango_edificio(cᵢ),  rango(B)=0, C=1, D=2, E=3',
+        desc: 'Criterio de salud ocupacional y protección articular: asigna a los docentes de mayor edad a los Edificios B y C y pisos bajos, y a los más jóvenes a la torre D.',
+        mechanism: 'Sub-operador Memético C ponderado por edad extraída del RFC; logra medianas de 53.3 años en Edif B vs 46.9 años en Edif D.',
+        manualVal: 'Costo etario: 642.3 pts',
+        optVal: 'Costo etario: 626.6 pts (Jerarquía B→C→D→E)'
+      },
+      {
+        code: 'S₇',
+        type: 'soft',
+        name: 'Estabilidad Semanal de Salón por Curso',
+        weight: 'W_S7 = 180.0 (AHP ω₇ = 0.311 • #2 Blanda)',
+        formula: 'S₇(c) = Σ_{(i,j) ∈ P_curso_sem} I(cᵢ ≠ cⱼ)',
+        desc: 'Evita que una misma materia cambie de aula entre lunes, miércoles y viernes, brindando certidumbre espacial a docentes y alumnos.',
+        mechanism: 'Preservada constructivamente por el operador Course-Uniform Crossover (60%) y reparada por el Sub-operador Memético A.',
+        manualVal: '12 cambios semanales',
+        optVal: '99.6% de cursos con salón fijo toda la semana'
+      }
+    ];
+
+    let currentConstraintFilter = 'all';
+    let selectedConstraintCode = 'H₁';
+
+    function filterConstraints(filterType) {
+      currentConstraintFilter = filterType;
+      const bAll = document.getElementById('btnFilterAll');
+      const bHard = document.getElementById('btnFilterHard');
+      const bSoft = document.getElementById('btnFilterSoft');
+
+      bAll.className = 'px-3 py-1.5 rounded-xl text-xs font-bold transition ' + (filterType === 'all' ? 'bg-uaemex-green text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200');
+      bHard.className = 'px-3 py-1.5 rounded-xl text-xs font-bold transition ' + (filterType === 'hard' ? 'bg-rose-700 text-white' : 'bg-slate-100 text-rose-800 hover:bg-rose-50');
+      bSoft.className = 'px-3 py-1.5 rounded-xl text-xs font-bold transition ' + (filterType === 'soft' ? 'bg-emerald-700 text-white' : 'bg-slate-100 text-emerald-800 hover:bg-emerald-50');
+
+      const filtered = CONSTRAINTS_CATALOG.filter(c => filterType === 'all' || c.type === filterType);
+      if (!filtered.some(c => c.code === selectedConstraintCode) && filtered.length > 0) {
+        selectedConstraintCode = filtered[0].code;
+      }
+      renderConstraintsCatalog();
+    }
+
+    function selectConstraint(code) {
+      selectedConstraintCode = code;
+      renderConstraintsCatalog();
+    }
+
+    function renderConstraintsCatalog() {
+      const grid = document.getElementById('constraintsCardsGrid');
+      const detail = document.getElementById('constraintDetailBox');
+      if (!grid || !detail) return;
+
+      grid.innerHTML = '';
+      const filtered = CONSTRAINTS_CATALOG.filter(c => currentConstraintFilter === 'all' || c.type === currentConstraintFilter);
+
+      filtered.forEach(item => {
+        const isSel = (item.code === selectedConstraintCode);
+        const isHard = (item.type === 'hard');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => selectConstraint(item.code);
+
+        let cls = 'p-3 rounded-xl border text-left transition flex flex-col justify-between gap-1.5 ';
+        if (isSel) {
+          cls += isHard
+            ? 'bg-rose-700 text-white border-rose-800 shadow-md ring-2 ring-rose-400'
+            : 'bg-uaemex-green text-white border-uaemex-dark shadow-md ring-2 ring-uaemex-gold';
+        } else {
+          cls += isHard
+            ? 'bg-rose-50/70 hover:bg-rose-100/80 text-slate-900 border-rose-200'
+            : 'bg-slate-50 hover:bg-emerald-50/70 text-slate-900 border-slate-200';
+        }
+        btn.className = cls;
+
+        const badgeCls = isSel
+          ? 'bg-black/25 text-white'
+          : (isHard ? 'bg-rose-200 text-rose-900' : 'bg-emerald-200 text-emerald-950');
+
+        btn.innerHTML = `
+          <div class="flex items-center justify-between gap-1 w-full">
+            <span class="font-mono font-extrabold text-sm px-2 py-0.5 rounded ${badgeCls}">${item.code}</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider opacity-80">${isHard ? 'Dura (Estricta)' : 'Blanda (AHP)'}</span>
+          </div>
+          <div class="text-xs font-bold leading-snug mt-0.5">${item.name}</div>
+          <div class="text-[10px] font-mono opacity-85 truncate">${item.weight}</div>
+        `;
+        grid.appendChild(btn);
+      });
+
+      const active = CONSTRAINTS_CATALOG.find(c => c.code === selectedConstraintCode) || CONSTRAINTS_CATALOG[0];
+      const isHard = (active.type === 'hard');
+
+      detail.innerHTML = `
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700/80 pb-3 mb-3">
+          <div class="flex items-center gap-2.5">
+            <span class="px-3 py-1 rounded-lg font-mono font-extrabold text-base ${isHard ? 'bg-rose-600 text-white' : 'bg-uaemex-gold text-slate-950'}">${active.code}</span>
+            <div>
+              <div class="text-xs font-bold uppercase tracking-wider ${isHard ? 'text-rose-400' : 'text-emerald-400'}">
+                ${isHard ? 'Restricción Dura (Mandato Físico / Legal Inviolable)' : 'Restricción Blanda (Criterio Ergonómico e Institucional Ponderado por AHP)'}
+              </div>
+              <h4 class="text-base font-extrabold text-white">${active.name}</h4>
+            </div>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-slate-800 border border-slate-600 font-mono text-xs font-bold text-uaemex-gold">
+            ${active.weight}
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 text-xs">
+          <div class="lg:col-span-7 space-y-2.5">
+            <div class="bg-slate-950/90 p-3 rounded-xl border border-slate-800 font-mono text-emerald-300 text-xs overflow-x-auto">
+              ${active.formula}
+            </div>
+            <p class="text-slate-200 leading-relaxed">
+              <strong class="text-white">Definición Operativa:</strong> ${active.desc}
+            </p>
+            <p class="text-slate-300 leading-relaxed">
+              <strong class="text-uaemex-gold">Mecanismo de Resolución en el AG Memético:</strong> ${active.mechanism}
+            </p>
+          </div>
+          <div class="lg:col-span-5 grid grid-cols-2 gap-2.5 items-stretch">
+            <div class="p-3.5 rounded-xl bg-rose-950/50 border border-rose-700/50 flex flex-col justify-between">
+              <div class="text-[10px] font-bold uppercase text-rose-300">Asignación Manual 2026A</div>
+              <div class="text-sm font-extrabold font-mono text-white my-1">${active.manualVal}</div>
+              <div class="text-[10px] text-rose-200">Hoja oficial 'Completa '</div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-500/50 flex flex-col justify-between">
+              <div class="text-[10px] font-bold uppercase text-emerald-300">AG Memético Optimizado</div>
+              <div class="text-sm font-extrabold font-mono text-uaemex-gold my-1">${active.optVal}</div>
+              <div class="text-[10px] text-emerald-200">Convergencia en 18.71 s</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     function loadFitnessPreset(preset) {
       if (preset === 'manual') {
         document.getElementById('sliderH1').value = 0;
         document.getElementById('sliderH2').value = 41;
+        document.getElementById('sliderH3').value = 2;
         document.getElementById('sliderS1').value = 2105;
         document.getElementById('sliderS2').value = 14955;
+        document.getElementById('sliderS3').value = 6850;
+        document.getElementById('sliderS4').value = 252;
         document.getElementById('sliderS5').value = 48;
+        document.getElementById('sliderS6').value = 642.3;
         document.getElementById('sliderS7').value = 12;
       } else if (preset === 'gen0') {
         document.getElementById('sliderH1').value = 0;
         document.getElementById('sliderH2').value = 0;
+        document.getElementById('sliderH3').value = 0;
         document.getElementById('sliderS1').value = 3450;
         document.getElementById('sliderS2').value = 15800;
+        document.getElementById('sliderS3').value = 6500;
+        document.getElementById('sliderS4').value = 248;
         document.getElementById('sliderS5').value = 49;
+        document.getElementById('sliderS6').value = 642.3;
         document.getElementById('sliderS7').value = 37;
       } else {
         document.getElementById('sliderH1').value = 0;
         document.getElementById('sliderH2').value = 0;
+        document.getElementById('sliderH3').value = 0;
         document.getElementById('sliderS1').value = 1720;
         document.getElementById('sliderS2').value = 13100;
+        document.getElementById('sliderS3').value = 6200;
+        document.getElementById('sliderS4').value = 215;
         document.getElementById('sliderS5').value = 32;
+        document.getElementById('sliderS6').value = 626.6;
         document.getElementById('sliderS7').value = 14;
       }
       updateFitnessCalc();
@@ -1962,26 +2273,29 @@
     function updateFitnessCalc() {
       const h1 = parseInt(document.getElementById('sliderH1').value, 10);
       const h2 = parseInt(document.getElementById('sliderH2').value, 10);
+      const h3 = parseInt(document.getElementById('sliderH3').value, 10);
       const s1 = parseInt(document.getElementById('sliderS1').value, 10);
       const s2 = parseInt(document.getElementById('sliderS2').value, 10);
+      const s3 = parseInt(document.getElementById('sliderS3').value, 10);
+      const s4 = parseInt(document.getElementById('sliderS4').value, 10);
       const s5 = parseInt(document.getElementById('sliderS5').value, 10);
+      const s6 = parseFloat(document.getElementById('sliderS6').value);
       const s7 = parseInt(document.getElementById('sliderS7').value, 10);
       const useGamma = document.getElementById('chkGammaFactor').checked;
 
       document.getElementById('valH1').textContent = h1;
       document.getElementById('valH2').textContent = h2;
+      document.getElementById('valH3').textContent = h3;
       document.getElementById('valS1').textContent = s1.toLocaleString() + ' m';
       document.getElementById('valS2').textContent = s2.toLocaleString() + ' m';
+      document.getElementById('valS3').textContent = s3.toLocaleString() + ' but';
+      document.getElementById('valS4').textContent = s4 + ' saltos';
       document.getElementById('valS5').textContent = s5 + ' ses';
+      document.getElementById('valS6').textContent = s6.toFixed(1) + ' pts';
       document.getElementById('valS7').textContent = s7 + ' cambios';
 
-      // Términos S3, S4, S6 base del óptimo (para fidelidad exacta con 0.013318 en Gen 149)
-      const s3Cost = 620.0; // 0.1 * S3
-      const s4Cost = 35.0 * 215; // 7525
-      const s6Cost = 25.0 * 626.6; // 15665
-
-      const penDura = 10000 * h1 + 5000 * h2;
-      const penBlanda = 4.5 * s1 + 2.5 * s2 + s3Cost + s4Cost + 220.0 * s5 + s6Cost + 180.0 * s7;
+      const penDura = 10000 * h1 + 5000 * h2 + 5000 * h3;
+      const penBlanda = 4.5 * s1 + 2.5 * s2 + 0.1 * s3 + 35.0 * s4 + 220.0 * s5 + 25.0 * s6 + 180.0 * s7;
       const gamma = useGamma ? 0.001 : 1.0;
       const denom = 1.0 + penDura + gamma * penBlanda;
       const fit = 1.0 / denom;
@@ -1990,7 +2304,7 @@
       document.getElementById('outPenBlanda').textContent = Math.round(penBlanda).toLocaleString();
       document.getElementById('outFitnessVal').textContent = useGamma ? fit.toFixed(6) : fit.toExponential(3);
       document.getElementById('fitnessLiveFormula').textContent =
-        `1 / (1.0 + ${penDura.toLocaleString()} + ${gamma} × ${ penBlanda.toFixed(1) }) = ${useGamma ? fit.toFixed(6) : fit.toExponential(4)}`;
+        `1 / (1.0 + ${penDura.toLocaleString()} + ${gamma} × ${penBlanda.toFixed(1)}) = ${useGamma ? fit.toFixed(6) : fit.toExponential(4)}`;
     }
 
     // -----------------------------------------------------------------------
@@ -2297,6 +2611,7 @@
       initTensorSim();
       setCrossoverMode('course');
       setSwapPhase(0);
+      renderConstraintsCatalog();
       updateFitnessCalc();
       onSliderEvoChange(10);
       reset2027Simulator();
